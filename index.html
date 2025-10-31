@@ -4832,3 +4832,76 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const balanceKey = "richlab_balance_demo";
+  let currentBalance = parseInt(localStorage.getItem(balanceKey) || "0");
+
+  // 💰 Թարմացնում է բալանսի ցուցադրությունը
+  function updateBalanceDisplay() {
+    const el = document.getElementById("main-balance");
+    if (el) el.textContent = `֏${currentBalance.toLocaleString("hy-AM")}`;
+  }
+
+  // 💾 Պահպանում է localStorage-ում
+  function saveBalance() {
+    localStorage.setItem(balanceKey, currentBalance.toString());
+  }
+
+  // ✨ Բարի գալուստի popup
+  function showWelcomePopup() {
+    const overlay = document.createElement("div");
+    overlay.style = `
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      background:rgba(0,0,0,0.6);display:flex;align-items:center;
+      justify-content:center;z-index:9999;
+    `;
+    overlay.innerHTML = `
+      <div style="background:white;padding:30px 25px;border-radius:16px;
+        text-align:center;max-width:320px;font-family:sans-serif;">
+        <h2 style="font-size:22px;font-weight:bold;">🎉 Նոր եկածներին բարի գալուստ!</h2>
+        <p style="margin:10px 0;font-size:16px;line-height:1.4;">
+          Բարի գալուստ <b>RichLab</b> 👋<br>
+          Դուք ստացել եք <b>֏8,000 բոնուս</b>՝ որպես նոր օգտատեր։
+        </p>
+        <button id="popup-ok" style="
+          margin-top:15px;background:#10b981;color:white;border:none;
+          padding:10px 20px;border-radius:8px;cursor:pointer;
+          font-weight:bold;">Սկսենք 🚀</button>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    document.getElementById("popup-ok").onclick = () => overlay.remove();
+  }
+
+  // 📈 Թվային անիմացիա՝ 0-ից մինչև 8000
+  function animateBalanceIncrease(from, to, duration = 1200) {
+    const el = document.getElementById("main-balance");
+    if (!el) return;
+    const startTime = performance.now();
+    function step(now) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const value = Math.floor(from + (to - from) * progress);
+      el.textContent = `֏${value.toLocaleString("hy-AM")}`;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  // 👋 Եթե նոր օգտատեր է
+  const isNewUser = !localStorage.getItem("richlab_user_registered");
+  if (isNewUser) {
+    const oldBalance = currentBalance;
+    currentBalance += 8000;
+    saveBalance();
+    animateBalanceIncrease(oldBalance, currentBalance);
+    localStorage.setItem("richlab_user_registered", "true");
+    showWelcomePopup();
+  }
+
+  // Միշտ թարմացնենք բալանսը բացվելիս
+  updateBalanceDisplay();
+});
+</script>
+
+
