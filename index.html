@@ -1008,7 +1008,7 @@
                         <input 
                             type="text" 
                             id="referral-link"
-                            value="https://t.me/BirdsGolden_bot/app?startapp=r_" 
+                            linkInput.value = `https://t.me/BirdsGolden_bot/app?startapp=r_${user.id}`; 
                             readonly 
                             class="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg bg-white text-sm"
                         >
@@ -4904,4 +4904,29 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  let completed = parseInt(localStorage.getItem("richlab_tasks_done") || "0");
+  let totalEarn = parseInt(localStorage.getItem("richlab_task_earnings") || "0");
 
+  const countEl = document.getElementById("completed-tasks-count");
+  const earnEl = document.getElementById("total-task-earnings");
+
+  function updateTaskDisplay() {
+    if (countEl) countEl.textContent = completed;
+    if (earnEl) earnEl.textContent = `֏${totalEarn.toLocaleString("hy-AM")}`;
+  }
+
+  // Կանչիր այս ֆունկցիան ամեն անգամ, երբ առաջադրանքն ավարտվում է
+  window.completeTask = function(reward = 1000) {
+    completed++;
+    totalEarn += reward;
+    localStorage.setItem("richlab_tasks_done", completed);
+    localStorage.setItem("richlab_task_earnings", totalEarn);
+    updateTaskDisplay();
+    alert(`🎯 Առաջադրանքը ավարտվեց!\n+֏${reward} ավելացավ`);
+  };
+
+  updateTaskDisplay();
+});
+</script>
