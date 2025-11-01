@@ -3069,71 +3069,7 @@
                 closeVideoModal();
             }
         });
- <!-- Referral Link -->
-                <script>
-                // Ստուգում cumulative total՝ localStorage-ում
-                function getTotal() {
-                    return parseInt(localStorage.getItem("totalBonus") || "0", 10);
-            }
-
-                function setTotal(value) {
-    localStorage.setItem("totalBonus", value);
-}
-
-                // Simulate visitor
-            function simulateVisitor() {
-                let total = getTotal();
-                total += 4000;
-                setTotal(total);
-                alert(`🎉 Simulated visitor! +4000 դրամ ստացվեց\n💰 Հիմնական գումար՝ ${total} դրամ`);
-            }
-
-                // Generate referral link
-            function generateReferralLink() {
-                const myId = localStorage.getItem("myId") || Math.floor(Math.random()*1000000);
-                localStorage.setItem("myId", myId);
-                const referralLink = `${window.location.origin}${window.location.pathname}?startapp=r_${myId}`;
-                alert("📩 Ձեր referral հղումը copy արեք կամ ուղարկեք:\n" + referralLink);
-            }
-
-               // Աշխատեցնելու համար պետք է համապատասխան կոճակները լինեն HTML-ում
-                document.addEventListener("DOMContentLoaded", () => {
-                const simulateBtn = document.getElementById("simulate-visitor");
-                const inviteBtn = document.getElementById("invite-btn");
-
-                if(simulateBtn) simulateBtn.addEventListener("click", simulateVisitor);
-                if(inviteBtn) inviteBtn.addEventListener("click", generateReferralLink);
-                });
-           </script>
-
-
-
-                <!-- Benefits Section -->
-                <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-lg mb-4">
-                    <h4 class="font-bold mb-3">Բացեք հսկայական եկամտի ներուժը հաշվետվություններով:</h4>
-                    <p class="text-sm opacity-90 mb-3">
-                        Ընդլայնեք Ձեր եկամտի հորիզոնները RichRise-ով՝ հաշվետվություն կատարելով Ձեր ընկերներին, ընտանիքին կամ հետևորդներին մեր հարթակ: Ահա, թե ինչ եք ստանում:
-                    </p>
-                    <div class="space-y-2">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-yellow-300">💰</span>
-                            <span class="text-sm">Վաստակեք լրացուցիչ ֏4,000 յուրաքանչյուր հաջող գրանցման համար:</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <span class="text-green-300">📈</span>
-                            <span class="text-sm">Եթե Ձեր հրավիրած օգտատերը գումար է վաստակում, Դուք նույնպես ստանում եք այդ գումարի 10%-ը որպես պարգև:</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Referrals List -->
-                <div class="bg-white border border-gray-200 rounded-lg p-4">
-                    <h4 class="font-semibold mb-3">Ձեր հաշվետվություններ</h4>
-                    <div class="text-center py-8 text-gray-500">
-                        <div class="text-4xl mb-2">👥</div>
-                        <div class="font-medium">Հաշվետվություններ չկան</div>
-                        <div class="text-sm">Այս պահին ոչ ոք չի գրանցվել Ձեր հղումով:</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+s
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'997db2fcf5116e9c',t:'MTc2MjAyNDI5OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
