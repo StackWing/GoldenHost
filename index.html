@@ -1,1210 +1,143 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="hy">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RichLab - Բացեք եկամտի հնարավորություններ</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            background: var(--tg-theme-bg-color, #392d37);
-            color: var(--tg-theme-text-color, #1f2937);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #272b3c 0%, #764ba2 100%);
-        }
-        .card-hover {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        .card-hover::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.6s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-        .card-hover:hover::before {
-            left: 100%;
-        }
-        .card-hover:active {
-            transform: translateY(-4px) scale(0.98);
-            transition: all 0.1s ease;
-        }
-        .earnings-card {
-            background: linear-gradient(135deg, #4facfe 0%, #16292a 100%);
-        }
-        .task-card {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        }
-        .referral-card {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-        }
-        .video-card {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-        }
-        .telegram-button {
-            background: var(--tg-theme-button-color, #2c1111);
-            color: var(--tg-theme-button-text-color, rgb(46, 8, 45));
-            border: none;
-            border-radius: 12px;
-            padding: 12px 24px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            width: 100%;
-            touch-action: manipulation;
-            position: relative;
-            overflow: hidden;
-        }
-        .telegram-button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255,255,255,0.3);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s ease, height 0.6s ease;
-        }
-        .telegram-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
-        }
-        .telegram-button:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-        .telegram-button:active {
-            transform: translateY(-1px) scale(0.98);
-            transition: all 0.1s ease;
-        }
-        .mini-app-container {
-            max-width: 100%;
-            padding: 0 16px;
-            margin: 0 auto;
-        }
-        .section-card {
-            background: var(--tg-theme-secondary-bg-color, rgb(30, 20, 54));
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
-        .section-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
-            background-size: 200% 100%;
-            animation: gradientShift 3s ease-in-out infinite;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .section-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-        }
-        .section-card:hover::before {
-            opacity: 1;
-        }
-        
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        
-        /* Ultra Animation styles */
-        .popup-overlay {
-            backdrop-filter: blur(8px);
-            animation: ultraFadeIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        
-        .popup-content {
-            animation: ultraSlideUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-        }
-        
-        .popup-content::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            background: linear-gradient(45deg, #667eea, #764ba2, #667eea, #764ba2);
-            background-size: 400% 400%;
-            border-radius: inherit;
-            z-index: -1;
-            animation: ultraBorderFlow 3s ease-in-out infinite;
-            opacity: 0.7;
-        }
-        
-        .popup-content.closing {
-            animation: ultraSlideDown 0.6s cubic-bezier(0.6, -0.28, 0.735, 0.045);
-        }
-        
-        @keyframes ultraFadeIn {
-            from { 
-                opacity: 0;
-                backdrop-filter: blur(0px);
-            }
-            to { 
-                opacity: 1;
-                backdrop-filter: blur(8px);
-            }
-        }
-        
-        @keyframes ultraSlideUp {
-            0% { 
-                opacity: 0;
-                transform: translateY(100px) scale(0.8) rotateX(15deg);
-                filter: blur(5px);
-            }
-            50% {
-                opacity: 0.8;
-                transform: translateY(-10px) scale(1.02) rotateX(0deg);
-                filter: blur(1px);
-            }
-            100% { 
-                opacity: 1;
-                transform: translateY(0) scale(1) rotateX(0deg);
-                filter: blur(0px);
-            }
-        }
-        
-        @keyframes ultraSlideDown {
-            0% { 
-                opacity: 1;
-                transform: translateY(0) scale(1) rotateX(0deg);
-                filter: blur(0px);
-            }
-            50% {
-                opacity: 0.5;
-                transform: translateY(20px) scale(0.95) rotateX(-5deg);
-                filter: blur(2px);
-            }
-            100% { 
-                opacity: 0;
-                transform: translateY(100px) scale(0.8) rotateX(15deg);
-                filter: blur(5px);
-            }
-        }
-        
-        @keyframes ultraBorderFlow {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        
-        .balance-update {
-            animation: ultraBalanceGlow 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        
-        @keyframes ultraBalanceGlow {
-            0% { 
-                transform: scale(1) rotateY(0deg);
-                box-shadow: 0 0 0 rgba(34, 197, 94, 0);
-                filter: brightness(1) saturate(1);
-            }
-            25% {
-                transform: scale(1.08) rotateY(5deg);
-                box-shadow: 0 0 30px rgba(34, 197, 94, 0.6);
-                filter: brightness(1.2) saturate(1.3);
-            }
-            50% { 
-                transform: scale(1.12) rotateY(0deg);
-                box-shadow: 0 0 40px rgba(34, 197, 94, 0.8), 0 0 80px rgba(34, 197, 94, 0.4);
-                filter: brightness(1.3) saturate(1.5);
-            }
-            75% {
-                transform: scale(1.05) rotateY(-3deg);
-                box-shadow: 0 0 25px rgba(34, 197, 94, 0.5);
-                filter: brightness(1.1) saturate(1.2);
-            }
-            100% { 
-                transform: scale(1) rotateY(0deg);
-                box-shadow: 0 0 0 rgba(34, 197, 94, 0);
-                filter: brightness(1) saturate(1);
-            }
-        }
-        
-        .success-checkmark {
-            animation: checkmarkDraw 0.6s ease-out;
-        }
-        
-        @keyframes checkmarkDraw {
-            0% { 
-                stroke-dasharray: 0 100;
-                opacity: 0;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% { 
-                stroke-dasharray: 100 0;
-                opacity: 1;
-            }
-        }
-        
-        .loading-spinner {
-            animation: ultraSpin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-            position: relative;
-        }
-        
-        .loading-spinner::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 50%;
-            background: conic-gradient(from 0deg, transparent, rgba(59, 130, 246, 0.8), transparent);
-            animation: ultraSpinGlow 2s linear infinite;
-        }
-        
-        @keyframes ultraSpin {
-            0% { 
-                transform: rotate(0deg) scale(1);
-                filter: brightness(1);
-            }
-            25% {
-                transform: rotate(90deg) scale(1.1);
-                filter: brightness(1.2);
-            }
-            50% { 
-                transform: rotate(180deg) scale(1);
-                filter: brightness(1);
-            }
-            75% {
-                transform: rotate(270deg) scale(1.1);
-                filter: brightness(1.2);
-            }
-            100% { 
-                transform: rotate(360deg) scale(1);
-                filter: brightness(1);
-            }
-        }
-        
-        @keyframes ultraSpinGlow {
-            0% { transform: rotate(0deg); opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { transform: rotate(360deg); opacity: 0.5; }
-        }
-        
-        /* Professional Linen Animations */
-        .linen-card {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .linen-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(59,130,246,0.1), rgba(147,51,234,0.1), transparent);
-            transform: rotate(45deg);
-            animation: linenProShine 4s infinite ease-in-out;
-        }
-        
-        .linen-card:hover::before {
-            animation: linenProShine 1.5s infinite ease-in-out;
-        }
-        
-        @keyframes linenProShine {
-            0% { 
-                transform: translateX(-120%) translateY(-120%) rotate(45deg);
-                opacity: 0;
-            }
-            20% {
-                opacity: 1;
-            }
-            50% { 
-                transform: translateX(0%) translateY(0%) rotate(45deg);
-                opacity: 1;
-            }
-            80% {
-                opacity: 1;
-            }
-            100% { 
-                transform: translateX(120%) translateY(120%) rotate(45deg);
-                opacity: 0;
-            }
-        }
-        
-        .linen-processing {
-            animation: linenProPulse 2s infinite, linenProGlow 2s infinite;
-        }
-        
-        @keyframes linenProPulse {
-            0%, 100% { 
-                transform: scale(1);
-                filter: brightness(1);
-            }
-            25% {
-                transform: scale(1.02);
-                filter: brightness(1.1);
-            }
-            50% { 
-                transform: scale(1.05);
-                filter: brightness(1.2);
-            }
-            75% {
-                transform: scale(1.02);
-                filter: brightness(1.1);
-            }
-        }
-        
-        @keyframes linenProGlow {
-            0%, 100% { 
-                box-shadow: 0 0 30px rgba(59, 130, 246, 0.4), 0 0 60px rgba(147, 51, 234, 0.2);
-                border-color: #3b82f6;
-            }
-            25% {
-                box-shadow: 0 0 40px rgba(99, 102, 241, 0.5), 0 0 80px rgba(139, 92, 246, 0.3);
-                border-color: #6366f1;
-            }
-            50% { 
-                box-shadow: 0 0 50px rgba(139, 92, 246, 0.6), 0 0 100px rgba(168, 85, 247, 0.4);
-                border-color: #8b5cf6;
-            }
-            75% {
-                box-shadow: 0 0 40px rgba(168, 85, 247, 0.5), 0 0 80px rgba(59, 130, 246, 0.3);
-                border-color: #a855f7;
-            }
-        }
-        
-        .linen-success {
-            animation: linenProSuccess 1.5s ease-out;
-        }
-        
-        @keyframes linenProSuccess {
-            0% { 
-                transform: scale(1) rotateY(0deg);
-                background: linear-gradient(135deg, #3b82f6, #6366f1);
-                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-            }
-            15% { 
-                transform: scale(1.08) rotateY(5deg);
-                background: linear-gradient(135deg, #10b981, #059669);
-                box-shadow: 0 0 40px rgba(16, 185, 129, 0.6);
-            }
-            30% { 
-                transform: scale(1.12) rotateY(-3deg);
-                background: linear-gradient(135deg, #34d399, #10b981);
-                box-shadow: 0 0 60px rgba(52, 211, 153, 0.8);
-            }
-            50% { 
-                transform: scale(1.05) rotateY(2deg);
-                background: linear-gradient(135deg, #6ee7b7, #34d399);
-                box-shadow: 0 0 80px rgba(110, 231, 183, 0.9);
-            }
-            70% {
-                transform: scale(1.02) rotateY(-1deg);
-                background: linear-gradient(135deg, #10b981, #059669);
-                box-shadow: 0 0 40px rgba(16, 185, 129, 0.6);
-            }
-            100% { 
-                transform: scale(1) rotateY(0deg);
-                background: linear-gradient(135deg, #3b82f6, #6366f1);
-                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-            }
-        }
-        
-        .linen-particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        
-        .linen-particle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-            animation: linenProParticleFloat 4s infinite ease-in-out;
-        }
-        
-        .linen-particle:nth-child(2n) {
-            background: linear-gradient(45deg, #6366f1, #a855f7);
-            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
-            animation-delay: 0.5s;
-        }
-        
-        .linen-particle:nth-child(3n) {
-            background: linear-gradient(45deg, #8b5cf6, #3b82f6);
-            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
-            animation-delay: 1s;
-        }
-        
-        @keyframes linenProParticleFloat {
-            0% {
-                opacity: 0;
-                transform: translateY(120px) scale(0) rotate(0deg);
-                filter: brightness(1);
-            }
-            15% {
-                opacity: 1;
-                transform: translateY(90px) scale(1.2) rotate(45deg);
-                filter: brightness(1.3);
-            }
-            50% {
-                opacity: 1;
-                transform: translateY(0px) scale(1) rotate(180deg);
-                filter: brightness(1.5);
-            }
-            85% {
-                opacity: 1;
-                transform: translateY(-90px) scale(1.2) rotate(315deg);
-                filter: brightness(1.3);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-120px) scale(0) rotate(360deg);
-                filter: brightness(1);
-            }
-        }
-        
-        .linen-icon-bounce {
-            animation: linenIconBounce 2s infinite;
-        }
-        
-        @keyframes linenIconBounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
-        
-        .linen-text-wave {
-            animation: linenTextWave 2s infinite;
-        }
-        
-        @keyframes linenTextWave {
-            0%, 100% { transform: translateY(0px); }
-            25% { transform: translateY(-2px); }
-            50% { transform: translateY(0px); }
-            75% { transform: translateY(2px); }
-        }
-        
-        .linen-border-dance {
-            position: relative;
-        }
-        
-        .linen-border-dance::after {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            background: linear-gradient(45deg, #3b82f6, #6366f1, #8b5cf6, #a855f7, #3b82f6);
-            background-size: 300% 300%;
-            border-radius: inherit;
-            z-index: -1;
-            animation: linenProBorderDance 4s infinite ease-in-out;
-            opacity: 0.6;
-        }
-        
-        .linen-border-dance:hover::after {
-            animation: linenProBorderDance 1.5s infinite ease-in-out;
-            opacity: 1;
-        }
-        
-        .linen-border-dance.selected::after {
-            background: linear-gradient(45deg, #10b981, #059669, #047857, #065f46, #10b981);
-            animation: linenProBorderDance 1s infinite ease-in-out;
-            opacity: 1;
-        }
-        
-        @keyframes linenProBorderDance {
-            0%, 100% { 
-                background-position: 0% 50%;
-                transform: scale(1);
-            }
-            25% {
-                background-position: 25% 25%;
-                transform: scale(1.01);
-            }
-            50% { 
-                background-position: 100% 50%;
-                transform: scale(1);
-            }
-            75% {
-                background-position: 75% 75%;
-                transform: scale(1.01);
-            }
-        }
-        
-        .linen-money-rain {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        
-        .money-symbol {
-            position: absolute;
-            font-size: 20px;
-            color: #14b8a6;
-            animation: moneyFall 4s infinite linear;
-        }
-        
-        @keyframes moneyFall {
-            0% {
-                opacity: 0;
-                transform: translateY(-50px) rotate(0deg);
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(400px) rotate(360deg);
-            }
-        }
-        
-        .linen-ripple {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .linen-ripple::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(20, 184, 166, 0.3);
-            transform: translate(-50%, -50%);
-            animation: linenRipple 2s infinite;
-        }
-        
-        @keyframes linenRipple {
-            0% {
-                width: 0;
-                height: 0;
-                opacity: 1;
-            }
-            100% {
-                width: 300px;
-                height: 300px;
-                opacity: 0;
-            }
-        }
-        
-        .deposit-method {
-            transition: all 0.2s ease;
-            border: 2px solid transparent;
-        }
-        
-        .deposit-method.selected {
-            border-color: #3b82f6;
-            background: #eff6ff;
-        }
-        
-        .deposit-method:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        .withdraw-method {
-            transition: all 0.2s ease;
-            border: 2px solid transparent;
-        }
-        
-        .withdraw-method.selected {
-            border-color: #ef4444;
-            background: #fef2f2;
-        }
-        
-        .withdraw-method:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        /* Ultra Navigation Styles */
-        .nav-btn {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .nav-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-        }
-        
-        .nav-btn:hover span:first-child {
-            transform: scale(1.2) rotateZ(5deg);
-        }
-        
-        .nav-btn:active {
-            transform: translateY(-1px) scale(0.95);
-        }
-        
-        .nav-btn.active {
-            color: #3b82f6;
-        }
-        
-        .nav-btn.active span:first-child {
-            animation: navBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        
-        .nav-ripple {
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
-            transform: scale(0);
-            transition: transform 0.4s ease-out;
-        }
-        
-        .nav-btn:active .nav-ripple {
-            transform: scale(1);
-        }
-        
-        @keyframes navBounce {
-            0%, 100% { transform: scale(1) rotateZ(0deg); }
-            25% { transform: scale(1.3) rotateZ(-5deg); }
-            50% { transform: scale(1.1) rotateZ(5deg); }
-            75% { transform: scale(1.2) rotateZ(-2deg); }
-        }
-    </style>
-</head>
-<body class="bg-gray-50 min-h-full">
-
-    <!doctype html>
-<html lang="hy">
- <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RichLab - Բացեք եկամտի հնարավորություններ</title>
-  <script src="/_sdk/element_sdk.js"></script>
   <style>
-        body {
-            box-sizing: border-box;
-        }
-        
-        .loading-spinner {
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Money rocket animation - more dynamic */
-        @keyframes moneyRocket {
-            0% { transform: translateY(0px) rotate(0deg) scale(1); }
-            25% { transform: translateY(-20px) rotate(5deg) scale(1.1); }
-            50% { transform: translateY(-10px) rotate(0deg) scale(1.05); }
-            75% { transform: translateY(-25px) rotate(-5deg) scale(1.15); }
-            100% { transform: translateY(0px) rotate(0deg) scale(1); }
-        }
-        
-        /* Powerful money pulse for button */
-        @keyframes moneyPulse {
-            0% { 
-                transform: scale(1); 
-                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7), 0 0 20px rgba(255, 215, 0, 0.3); 
-            }
-            50% { 
-                transform: scale(1.08); 
-                box-shadow: 0 0 0 20px rgba(255, 215, 0, 0), 0 0 40px rgba(255, 215, 0, 0.5); 
-            }
-            100% { 
-                transform: scale(1); 
-                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0), 0 0 20px rgba(255, 215, 0, 0.3); 
-            }
-        }
-        
-        /* Luxury gradient animation */
-        @keyframes luxuryGradient {
-            0% { background: linear-gradient(135deg, #1e3a8a, #7c3aed, #fbbf24); }
-            20% { background: linear-gradient(135deg, #7c3aed, #fbbf24, #ef4444); }
-            40% { background: linear-gradient(135deg, #fbbf24, #ef4444, #10b981); }
-            60% { background: linear-gradient(135deg, #ef4444, #10b981, #1e3a8a); }
-            80% { background: linear-gradient(135deg, #10b981, #1e3a8a, #7c3aed); }
-            100% { background: linear-gradient(135deg, #1e3a8a, #7c3aed, #fbbf24); }
-        }
-        
-        /* Slide up animation */
-        @keyframes slideUp {
-            from { 
-                opacity: 0; 
-                transform: translateY(30px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            }
-        }
-        
-        /* Fade in animation */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        /* Scale in animation */
-        @keyframes scaleIn {
-            from { 
-                opacity: 0; 
-                transform: scale(0.8); 
-            }
-            to { 
-                opacity: 1; 
-                transform: scale(1); 
-            }
-        }
-        
-        /* Bounce animation */
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
-        
-        /* Glow animation */
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
-            50% { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.6); }
-        }
-        
-        /* Money rain animation */
-        @keyframes moneyRain {
-            0% {
-                transform: translateY(-100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
-        
-        /* Diamond sparkle animation */
-        @keyframes diamondSparkle {
-            0%, 100% { 
-                transform: scale(0) rotate(0deg); 
-                opacity: 0; 
-            }
-            50% { 
-                transform: scale(1.5) rotate(180deg); 
-                opacity: 1; 
-            }
-        }
-        
-        /* Apply animations */
-        .animated-bg {
-            animation: luxuryGradient 6s ease-in-out infinite;
-        }
-        
-        .rocket-float {
-            animation: moneyRocket 2.5s ease-in-out infinite;
-            display: inline-block;
-            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
-        }
-        
-        .title-glow {
-            animation: glow 2s ease-in-out infinite;
-            background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: glow 2s ease-in-out infinite, shimmer 3s ease-in-out infinite;
-        }
-        
-        @keyframes shimmer {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        .slide-up {
-            animation: slideUp 0.8s ease-out;
-        }
-        
-        .fade-in {
-            animation: fadeIn 1s ease-out;
-        }
-        
-        .scale-in {
-            animation: scaleIn 0.6s ease-out;
-        }
-        
-        .bounce-in {
-            animation: bounce 1s ease-out;
-        }
-        
-        .pulse-button {
-            animation: moneyPulse 1.5s infinite;
-            transition: all 0.3s ease;
-            background: linear-gradient(45deg, #ffffff, #ffd700, #ffffff);
-            background-size: 200% 200%;
-            animation: moneyPulse 1.5s infinite, buttonShimmer 2s ease-in-out infinite;
-        }
-        
-        @keyframes buttonShimmer {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        .pulse-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.4);
-        }
-        
-        /* Staggered animations */
-        .delay-1 { animation-delay: 0.2s; }
-        .delay-2 { animation-delay: 0.4s; }
-        .delay-3 { animation-delay: 0.6s; }
-        .delay-4 { animation-delay: 0.8s; }
-        
-        /* Particle effects */
-        .particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            pointer-events: none;
-        }
-        
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 215, 0, 0.8);
-            border-radius: 50%;
-            animation: particleFloat 6s linear infinite;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        }
-        
-        .money-symbol {
-            position: absolute;
-            font-size: 24px;
-            font-weight: bold;
-            color: #ffd700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
-            animation: moneyRain 4s linear infinite;
-            pointer-events: none;
-        }
-        
-        .diamond {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: linear-gradient(45deg, #ffd700, #ffffff, #ffd700);
-            transform: rotate(45deg);
-            animation: diamondSparkle 2s ease-in-out infinite;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
-        }
-        
-        @keyframes particleFloat {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-10vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-        
-        /* Loading animation enhancements */
-        .loading-text {
-            animation: fadeIn 0.5s ease-in-out infinite alternate;
-        }
-    </style>
-  <style>@view-transition { navigation: auto; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
- </head>
- <body class="bg-gray-50 min-h-full"><!-- Login Screen -->
-  <div id="login-screen" class="fixed inset-0 animated-bg flex items-center justify-center z-50"><!-- Money rain background -->
-   <div class="particles"><!-- Golden particles -->
-    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
-    <div class="particle" style="left: 20%; animation-delay: 1s;"></div>
-    <div class="particle" style="left: 30%; animation-delay: 2s;"></div>
-    <div class="particle" style="left: 40%; animation-delay: 3s;"></div>
-    <div class="particle" style="left: 50%; animation-delay: 4s;"></div>
-    <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
-    <div class="particle" style="left: 70%; animation-delay: 0.5s;"></div>
-    <div class="particle" style="left: 80%; animation-delay: 1.5s;"></div>
-    <div class="particle" style="left: 90%; animation-delay: 2.5s;"></div><!-- Money symbols rain -->
-    <div class="money-symbol" style="left: 15%; animation-delay: 0.5s;">
-     💰
-    </div>
-    <div class="money-symbol" style="left: 25%; animation-delay: 1.2s;">
-     💎
-    </div>
-    <div class="money-symbol" style="left: 35%; animation-delay: 2.1s;">
-     💵
-    </div>
-    <div class="money-symbol" style="left: 45%; animation-delay: 0.8s;">
-     🤑
-    </div>
-    <div class="money-symbol" style="left: 55%; animation-delay: 1.8s;">
-     💰
-    </div>
-    <div class="money-symbol" style="left: 65%; animation-delay: 2.5s;">
-     💎
-    </div>
-    <div class="money-symbol" style="left: 75%; animation-delay: 1.1s;">
-     💵
-    </div>
-    <div class="money-symbol" style="left: 85%; animation-delay: 0.3s;">
-     🤑
-    </div><!-- Diamond sparkles -->
-    <div class="diamond" style="left: 12%; top: 20%; animation-delay: 0s;"></div>
-    <div class="diamond" style="left: 28%; top: 40%; animation-delay: 0.7s;"></div>
-    <div class="diamond" style="left: 42%; top: 60%; animation-delay: 1.4s;"></div>
-    <div class="diamond" style="left: 58%; top: 30%; animation-delay: 0.9s;"></div>
-    <div class="diamond" style="left: 72%; top: 70%; animation-delay: 1.8s;"></div>
-    <div class="diamond" style="left: 88%; top: 50%; animation-delay: 0.4s;"></div>
-   </div>
-   <div class="text-center text-white p-8 relative z-10">
-    <div class="text-6xl mb-6 rocket-float scale-in">
-     🚀
-    </div>
-    <script>
-function loginWithTelegram() {
-    const loginContent = document.getElementById('login-content');
-    const loginLoading = document.getElementById('login-loading');
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+    }
 
-    // Անջատում ենք login բաժինը, ցույց ենք տալիս loading-ը
-    loginContent.classList.add('hidden');
-    loginLoading.classList.remove('hidden');
+    .hidden {
+      display: none;
+    }
 
-    // Փոքր անիմացիա՝ smoother transition-ի համար
-    loginLoading.style.opacity = 0;
-    setTimeout(() => {
-        loginLoading.style.transition = 'opacity 0.6s ease-in';
-        loginLoading.style.opacity = 1;
-    }, 100);
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
 
-    // ⏳ 2.5 վայրկյանից հետո բացում ենք Telegram Mini App-ը
-    setTimeout(() => {
-        // Բացում է քո բոտը որպես mini app
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .fadeOut {
+      animation: fadeOut 1s ease-out forwards;
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    .pulse-button {
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+
+<body id="login-screen">
+  <div id="login-content">
+    <div style="font-size: 64px; margin-bottom: 12px;">🚀</div>
+    <h1 class="text-3xl font-bold mb-4">RichLab</h1>
+    <p class="text-xl mb-8 opacity-90">Բացեք եկամտի հնարավորություններ</p>
+    <button onclick="loginWithTelegram()" class="pulse-button bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg mb-4 w-full max-w-sm">
+      <span class="mr-2">📱</span> Մուտք Telegram-ով
+    </button>
+    <p class="text-sm opacity-75">Անվտանգ և արագ մուտք</p>
+  </div>
+
+  <div id="login-loading" class="hidden">
+    <div class="loading-spinner"></div>
+    <p class="text-lg">Մուտք գործում...</p>
+  </div>
+
+  <script>
+    // 💎 Money sparkle effect
+    function createSparkle(x, y) {
+      const symbols = ['💰', '💎', '💵', '🤑', '✨'];
+      const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+      const sparkle = document.createElement('div');
+      sparkle.textContent = symbol;
+      sparkle.style.position = 'fixed';
+      sparkle.style.left = x + 'px';
+      sparkle.style.top = y + 'px';
+      sparkle.style.fontSize = '20px';
+      sparkle.style.zIndex = '9999';
+      sparkle.style.pointerEvents = 'none';
+      sparkle.style.animation = 'moneySparkle 1.2s ease-out forwards';
+      document.body.appendChild(sparkle);
+
+      setTimeout(() => sparkle.remove(), 1200);
+    }
+
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes moneySparkle {
+        0% { transform: scale(0) rotate(0deg) translateY(0); opacity: 1; }
+        50% { transform: scale(1.5) rotate(180deg) translateY(-20px); opacity: 1; }
+        100% { transform: scale(0) rotate(360deg) translateY(-40px); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+
+    function createMoneyExplosion() {
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          const x = Math.random() * window.innerWidth;
+          const y = Math.random() * window.innerHeight;
+          createSparkle(x, y);
+        }, i * 150);
+      }
+    }
+    setInterval(createMoneyExplosion, 3000);
+
+    // 🔹 Login logic
+    function loginWithTelegram() {
+      const loginContent = document.getElementById('login-content');
+      const loginLoading = document.getElementById('login-loading');
+
+      loginContent.classList.add('fadeOut');
+      setTimeout(() => {
+        loginContent.classList.add('hidden');
+        loginLoading.classList.remove('hidden');
+      }, 500);
+
+      // ⏳ 2 վայրկյանից հետո բացում է քո Telegram Mini App-ը
+      setTimeout(() => {
         window.location.replace("https://t.me/BirdsGolden_bot?start=app");
-    }, 2500);
-}
-</script>
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
 
-
-        function createSparkle(x, y) {
-            // Create multiple money sparkles
-            const symbols = ['💰', '💎', '💵', '🤑', '✨'];
-            const symbol = symbols[Math.floor(Math.random() * symbols.length)];
-            
-            const sparkle = document.createElement('div');
-            sparkle.style.position = 'fixed';
-            sparkle.style.left = x + 'px';
-            sparkle.style.top = y + 'px';
-            sparkle.style.fontSize = '20px';
-            sparkle.style.pointerEvents = 'none';
-            sparkle.style.zIndex = '1000';
-            sparkle.style.animation = 'moneySparkleEffect 1.2s ease-out forwards';
-            sparkle.textContent = symbol;
-            
-            // Add money sparkle keyframes if not already added
-            if (!document.querySelector('#money-sparkle-styles')) {
-                const style = document.createElement('style');
-                style.id = 'money-sparkle-styles';
-                style.textContent = `
-                    @keyframes moneySparkleEffect {
-                        0% { 
-                            transform: scale(0) rotate(0deg) translateY(0px); 
-                            opacity: 1; 
-                        }
-                        50% { 
-                            transform: scale(1.5) rotate(180deg) translateY(-20px); 
-                            opacity: 1; 
-                        }
-                        100% { 
-                            transform: scale(0) rotate(360deg) translateY(-40px); 
-                            opacity: 0; 
-                        }
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-            
-            document.body.appendChild(sparkle);
-            
-            setTimeout(() => {
-                if (sparkle.parentNode) {
-                    sparkle.parentNode.removeChild(sparkle);
-                }
-            }, 1200);
-        }
-
-        // Create continuous money explosion effect
-        function createMoneyExplosion() {
-            const container = document.getElementById('login-screen');
-            if (!container) return;
-            
-            for (let i = 0; i < 5; i++) {
-                setTimeout(() => {
-                    const x = Math.random() * window.innerWidth;
-                    const y = Math.random() * window.innerHeight;
-                    createSparkle(x, y);
-                }, i * 200);
-            }
-        }
-
-        // Start money explosion every 3 seconds
-        setInterval(createMoneyExplosion, 3000);
-
-        function loginWithTelegram() {
-            // Hide login content and show loading with animation
-            const loginContent = document.getElementById('login-content');
-            const loginLoading = document.getElementById('login-loading');
-            
-            loginContent.style.animation = 'fadeOut 0.3s ease-out forwards';
-            
-            setTimeout(() => {
-                loginContent.classList.add('hidden');
-                loginLoading.classList.remove('hidden');
-                loginLoading.style.animation = 'fadeIn 0.5s ease-in forwards';
-            }, 300);
-            
-            // Simulate login process
-            setTimeout(() => {
-                // Add success animation
-                const loginScreen = document.getElementById('login-screen');
-                loginScreen.style.animation = 'fadeOut 1s ease-out forwards';
-                
-                setTimeout(() => {
-                    loginScreen.style.display = 'none';
-                     window.location.replace("https://t.me/BirdsGolden_bot?start=app");
-                }, 1000);
-            }, 2000);
-        }
-
-        // Add fadeOut animation
-        const fadeOutStyle = document.createElement('style');
-        fadeOutStyle.textContent = `
-            @keyframes fadeOut {
-                from { opacity: 1; }
-                to { opacity: 0; }
-            }
-        `;
-        document.head.appendChild(fadeOutStyle);
-
-        // Initialize Element SDK
-        if (window.elementSdk) {
-            const defaultConfig = {
-                background_color: "#3b82f6",
-                accent_color: "#8b5cf6",
-                text_color: "#ffffff",
-                button_color: "#ffffff",
-                app_title: "RichLab",
-                subtitle: "Բացեք եկամտի հնարավորություններ",
-                button_text: "Մուտք Telegram-ով",
-                loading_text: "Մուտք գործում...",
-                security_text: "Անվտանգ և արագ մուտք"
-            };
-
-            window.elementSdk.init({
-                defaultConfig,
-                onConfigChange: async (config) => {
-                    const loginScreen = document.getElementById('login-screen');
-                    const title = document.querySelector('h1');
-                    const subtitle = document.querySelector('p.opacity-90');
-                    const button = document.querySelector('button');
-                    const securityText = document.querySelector('p.opacity-75');
-                    const loadingText = document.querySelector('.loading-text');
-
-                    // Update colors
-                    loginScreen.style.background = `linear-gradient(135deg, ${config.background_color || defaultConfig.background_color}, ${config.accent_color || defaultConfig.accent_color})`;
-                    
-                    // Update text content
-                    if (title) title.textContent = config.app_title || defaultConfig.app_title;
-                    if (subtitle) subtitle.textContent = config.subtitle || defaultConfig.subtitle;
-                    if (securityText) securityText.textContent = config.security_text || defaultConfig.security_text;
-                    if (loadingText) loadingText.textContent = config.loading_text || defaultConfig.loading_text;
-                    
-                    if (button) {
-                        button.innerHTML = `<span class="mr-2">📱</span>${config.button_text || defaultConfig.button_text}`;
-                        button.style.backgroundColor = config.button_color || defaultConfig.button_color;
-                    }
-                },
-                mapToCapabilities: (config) => ({
-                    recolorables: [
-                        {
-                            get: () => config.background_color || defaultConfig.background_color,
-                            set: (value) => {
-                                config.background_color = value;
-                                window.elementSdk.setConfig({ background_color: value });
-                            }
-                        },
-                        {
-                            get: () => config.accent_color || defaultConfig.accent_color,
-                            set: (value) => {
-                                config.accent_color = value;
-                                window.elementSdk.setConfig({ accent_color: value });
-                            }
-                        },
-                        {
-                            get: () => config.button_color || defaultConfig.button_color,
-                            set: (value) => {
-                                config.button_color = value;
-                                window.elementSdk.setConfig({ button_color: value });
-                            }
-                        }
-                    ],
-                    borderables: [],
-                    fontEditable: undefined,
-                    fontSizeable: undefined
-                }),
-                mapToEditPanelValues: (config) => new Map([
-                    ["app_title", config.app_title || defaultConfig.app_title],
-                    ["subtitle", config.subtitle || defaultConfig.subtitle],
-                    ["button_text", config.button_text || defaultConfig.button_text],
-                    ["loading_text", config.loading_text || defaultConfig.loading_text],
-                    ["security_text", config.security_text || defaultConfig.security_text]
-                ])
-            });
-        }
+<div>
+    
     </script>
  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'997e5119f4506e9c',t:'MTc2MjAzMDc3NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
