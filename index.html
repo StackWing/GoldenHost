@@ -1,483 +1,704 @@
 <!doctype html>
-<html lang="hy" class="h-full">
+<html lang="hy">
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RichLab Financial Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/_sdk/data_sdk.js"></script>
+  <title>RichLab - Earning Platform</title>
   <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
         body {
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        
         .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        .crypto-card {
-            background: rgba(255, 255, 255, 0.05);
+        
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .earning-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        
+        .earning-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-item {
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .support-form {
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .progress-bar {
-            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+        
+        .section {
+            display: none;
         }
-        .nav-active {
-            background: rgba(255, 255, 255, 0.2);
+        
+        .section.active {
+            display: block;
         }
     </style>
   <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
- <body class="h-full gradient-bg text-white font-sans">
+ <body class="min-h-full bg-gray-50">
   <div class="min-h-full flex flex-col"><!-- Header -->
-   <header class="flex items-center justify-between p-4 bg-black bg-opacity-20">
-    <div class="flex items-center space-x-3">
-     <h1 id="app-title" class="text-xl font-bold">RichLab</h1><span id="demo-badge" class="bg-orange-500 text-white px-2 py-1 rounded text-xs font-medium">Դեմո</span>
-    </div><button id="add-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"> + Ավելացնել </button>
+   <header class="gradient-bg text-white p-4">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+     <div class="flex items-center space-x-3">
+      <h1 id="platform-name" class="text-xl font-bold">RichLab</h1><span id="demo-text" class="bg-white bg-opacity-20 px-2 py-1 rounded text-sm">Դեմո</span>
+     </div><button class="bg-white bg-opacity-20 hover:bg-opacity-30 px-3 py-1 rounded-lg text-sm font-medium transition-colors"> + Ավելացնել </button>
+    </div>
    </header><!-- Main Content -->
-   <main class="flex-1 p-4 space-y-6 overflow-y-auto"><!-- Cash Balance Section -->
-    <section class="bg-white bg-opacity-10 rounded-xl p-4 backdrop-filter backdrop-blur-lg">
-     <h2 id="cash-title" class="text-lg font-semibold mb-3">Կանխիկ</h2>
-     <div class="space-y-2">
-      <p id="balance-label" class="text-sm opacity-80">Ընթացիկ մնացորդ</p>
-      <p id="balance-amount" class="text-2xl font-bold">֏8,000</p>
-      <div class="flex space-x-2 mt-3"><button id="add-cash-btn" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm transition-colors"> + Ավելացնել </button> <button id="withdraw-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors"> ↗ Ելքագրել </button>
+   <main class="flex-1 max-w-md mx-auto w-full p-4"><!-- Home Section -->
+    <div id="home-section" class="section active space-y-6"><!-- Balance Card -->
+     <div class="bg-white rounded-xl p-6 card-shadow">
+      <div class="text-center">
+       <h2 class="text-gray-600 text-sm mb-2">Ընդհանուր մնացորդ</h2>
+       <div class="text-3xl font-bold text-gray-800 mb-4">
+        ֏<span id="total-balance">8,000</span>
+       </div>
+       <p id="add-money-text" class="text-gray-600 text-sm mb-4">Ավելացրեք գումար և սկսեք վաստակել</p><button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors"> Ավելացնել գումար </button>
+      </div>
+     </div><!-- Earning Methods -->
+     <div class="space-y-4">
+      <h3 class="text-lg font-semibold text-gray-800">Վաստակելու եղանակներ</h3><!-- Tasks Card -->
+      <div class="earning-card bg-white rounded-xl p-4 card-shadow">
+       <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+         <div class="text-2xl">
+          📱
+         </div>
+         <div>
+          <h4 class="font-medium text-gray-800">Առաջադրանքներ</h4>
+          <p class="text-sm text-gray-600">Փորձարկեք հավելվածներ և խաղեր</p>
+          <div class="flex items-center space-x-4 mt-1"><span class="text-xs text-gray-500">0 կատարված</span> <span class="text-green-600 font-medium">+֏2500 յուրաքանչյուրի համար</span>
+          </div>
+         </div>
+        </div>
+        <div class="text-gray-400">
+         →
+        </div>
+       </div>
+      </div><!-- Referral Card -->
+      <div class="earning-card bg-white rounded-xl p-4 card-shadow">
+       <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+         <div class="text-2xl">
+          👥
+         </div>
+         <div>
+          <h4 class="font-medium text-gray-800">Հրավիրեք ընկերներ</h4>
+          <p class="text-sm text-gray-600">Ստացեք պարգև յուրաքանչյուր հրավերի համար</p>
+          <div class="flex items-center space-x-4 mt-1"><span class="text-xs text-gray-500">0 հրավիրված</span> <span class="text-green-600 font-medium">+֏4000 + 10% եկամուտ</span>
+          </div>
+         </div>
+        </div>
+        <div class="text-gray-400">
+         →
+        </div>
+       </div>
+      </div><!-- Videos Card -->
+      <div class="earning-card bg-white rounded-xl p-4 card-shadow">
+       <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+         <div class="text-2xl">
+          📺
+         </div>
+         <div>
+          <h4 class="font-medium text-gray-800">Դիտեք տեսանյութեր</h4>
+          <p class="text-sm text-gray-600">Դիտեք և վաստակեք գումար</p>
+          <div class="flex items-center space-x-4 mt-1"><span class="text-xs text-gray-500">0 դիտված</span> <span class="text-green-600 font-medium">+֏2700 յուրաքանչյուրի համար</span>
+          </div>
+         </div>
+        </div>
+        <div class="text-gray-400">
+         →
+        </div>
+       </div>
+      </div><!-- Cashout Card -->
+      <div class="earning-card bg-white rounded-xl p-4 card-shadow">
+       <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+         <div class="text-2xl">
+          💰
+         </div>
+         <div>
+          <h4 class="font-medium text-gray-800">Կանխիկ ելքագրում</h4>
+          <p class="text-sm text-gray-600">Ելքագրեք Ձեր վաստակած գումարը</p>
+          <div class="flex items-center space-x-4 mt-1"><span class="text-green-600 font-medium">֏125,000 + 15 աշխատանքային օր</span>
+          </div>
+          <div class="flex items-center mt-2"><span class="text-orange-500 text-xs">⚠️</span> <span class="text-xs text-gray-500 ml-1">Գումարը կնստի Ձեր հաշվին 15 աշխատանքային օրերի ընթացքում</span>
+          </div>
+         </div>
+        </div>
+        <div class="text-gray-400">
+         →
+        </div>
+       </div>
+      </div>
+     </div><!-- Support Section -->
+     <div class="support-form rounded-xl p-6 card-shadow mt-8">
+      <div class="text-center mb-6">
+       <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+        </svg>
+       </div>
+       <h3 id="support-title" class="text-lg font-semibold text-gray-800">Contact Support</h3>
+       <p id="support-subtitle" class="text-gray-600 text-sm">We're here to help</p>
+      </div>
+      <form id="support-form" class="space-y-4">
+       <div><label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label> <input type="text" id="fullName" name="fullName" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+       </div>
+       <div><label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address *</label> <input type="email" id="email" name="email" required placeholder="john@company.com" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+       </div>
+       <div><label for="message" class="block text-sm font-medium text-gray-700 mb-1">How can we help you? *</label> <textarea id="message" name="message" rows="4" required placeholder="Please provide details about your inquiry or issue..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"></textarea>
+       </div><button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors"> Send Message </button>
+      </form>
+      <div id="form-success" class="hidden mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+       <div class="flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg> Your message has been sent successfully! We'll get back to you soon.
+       </div>
       </div>
      </div>
-    </section><!-- Crypto Balances -->
-    <section class="space-y-3">
-     <h2 id="crypto-title" class="text-lg font-semibold">Կրիպտո մնացորդներ</h2>
-     <div class="crypto-card rounded-xl p-4">
-      <div class="flex justify-between items-center">
-       <div class="flex items-center space-x-3">
-        <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-sm font-bold">
-         ₿
+    </div><!-- Referral Section -->
+    <div id="referral-section" class="section space-y-6">
+     <div class="bg-white rounded-xl p-6 card-shadow">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Հղումների վիճակագրություն</h3>
+      <div class="grid grid-cols-2 gap-4 mb-6">
+       <div class="text-center p-4 bg-blue-50 rounded-lg">
+        <div class="text-2xl font-bold text-blue-600">
+         0
+        </div>
+        <div class="text-sm text-gray-600">
+         Հղումների բոնուս
+        </div>
+       </div>
+       <div class="text-center p-4 bg-green-50 rounded-lg">
+        <div class="text-2xl font-bold text-green-600">
+         0
+        </div>
+        <div class="text-sm text-gray-600">
+         Ընդհանուր հղումներ
+        </div>
+       </div>
+      </div><!-- Help Guide -->
+      <div id="help-guide" class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 mb-6">
+       <div class="flex items-start space-x-3">
+        <div class="text-purple-600 text-lg">
+         ❓
         </div>
         <div>
-         <p class="font-medium">Bitcoin (BTC)</p>
-         <p class="text-sm opacity-70">0.00000000 BTC</p>
+         <h4 class="font-medium text-gray-800 mb-2">Օգնության ուղեցույց է պե՞տք։</h4>
+         <p class="text-sm text-gray-600 leading-relaxed">RichRise-ը առաջարկում է 4 000 Նաիրայի առատաձեռն բոնուս ձեր հղման միջոցով գրանցվող յուրաքանչյուր օգտատիրոջ համար, և դուք կստանաք հղման օգտատիրոջ եկամտի 10%-ը որպես միջնորդավճար։</p><button onclick="closeHelpGuide()" class="text-purple-600 text-sm font-medium mt-2 hover:text-purple-700">Փակել</button>
         </div>
        </div>
-       <p class="text-sm opacity-70">$0.00</p>
-      </div>
-     </div>
-     <div class="crypto-card rounded-xl p-4">
-      <div class="flex justify-between items-center">
-       <div class="flex items-center space-x-3">
-        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-sm font-bold">
-         D
+      </div><!-- Referral Link -->
+      <div class="mb-6">
+       <h4 class="font-medium text-gray-800 mb-3">Ձեր հղման հղումը</h4>
+       <div class="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg border"><input type="text" value="https://t.me/richcdrise_bot/app?startapp=r_" class="flex-1 bg-transparent text-sm text-gray-600 outline-none" readonly> <button onclick="copyReferralLink()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors"> Պատճենել </button>
+       </div>
+      </div><!-- Share Buttons -->
+      <div class="mb-6">
+       <h4 class="font-medium text-gray-800 mb-3">Կիսվեք</h4>
+       <div class="grid grid-cols-2 gap-3"><button onclick="shareToTelegram()" class="flex items-center justify-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg transition-colors"> <span>📱</span> <span class="text-sm font-medium">Telegram</span> </button> <button onclick="shareToWhatsApp()" class="flex items-center justify-center space-x-2 bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg transition-colors"> <span>💬</span> <span class="text-sm font-medium">WhatsApp</span> </button>
+       </div>
+      </div><!-- Referrals List -->
+      <div>
+       <h4 class="font-medium text-gray-800 mb-3">Ձեր հղումներով</h4>
+       <div class="text-center py-8 bg-gray-50 rounded-lg">
+        <div class="text-gray-400 text-4xl mb-3">
+         👥
         </div>
-        <div>
-         <p class="font-medium">DASH</p>
-         <p class="text-sm opacity-70">0.00 USDT</p>
+        <h5 class="font-medium text-gray-600 mb-2">Հղումներ չկան</h5>
+        <p class="text-sm text-gray-500">Մինչ այժմ ոչ ոք չի գրանցվել ձեր հղումով։</p>
+       </div>
+      </div>
+     </div>
+    </div><!-- Center Section -->
+    <div id="center-section" class="section space-y-6">
+     <div class="bg-white rounded-xl p-6 card-shadow">
+      <div class="text-center mb-6">
+       <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-3xl">🎯</span>
+       </div>
+       <h3 class="text-xl font-semibold text-gray-800 mb-2">Կենտրոն</h3>
+       <p class="text-gray-600">Ձեր գործունեության կենտրոնը</p>
+      </div>
+      <div class="space-y-4">
+       <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4">
+        <h4 class="font-medium text-gray-800 mb-2">📊 Վիճակագրություն</h4>
+        <div class="grid grid-cols-2 gap-4">
+         <div class="text-center">
+          <div class="text-lg font-bold text-purple-600">
+           0
+          </div>
+          <div class="text-xs text-gray-600">
+           Ակտիվ առաջադրանքներ
+          </div>
+         </div>
+         <div class="text-center">
+          <div class="text-lg font-bold text-pink-600">
+           0
+          </div>
+          <div class="text-xs text-gray-600">
+           Ավարտված առաջադրանքներ
+          </div>
+         </div>
         </div>
        </div>
-       <p class="text-sm opacity-70">$0.00</p>
-      </div>
-     </div>
-    </section><!-- Transaction History -->
-    <section class="space-y-3">
-     <div class="flex items-center justify-between">
-      <h2 class="text-lg font-semibold">Գործարքների պատմություն</h2><button id="history-toggle" class="text-white opacity-70 hover:opacity-100 transition-opacity">↓</button>
-     </div>
-     <div id="transaction-list" class="space-y-2"><!-- Transactions will be populated here -->
-     </div>
-    </section><!-- Withdrawal Requirements -->
-    <section class="bg-yellow-500 bg-opacity-20 rounded-xl p-4 border border-yellow-500 border-opacity-30">
-     <h3 class="font-semibold mb-3">Ելքագրման պահանջներ</h3>
-     <p class="text-sm mb-4 opacity-90">Ելքագրման համար անհրաժեշտ է նվազագույնը ֏125,000 մնացորդ և 15 աշխատանքային օր:</p>
-     <div class="space-y-3">
-      <div>
-       <div class="flex items-center justify-between mb-1"><span class="text-sm">💰 Մնացորդ</span> <span class="text-sm font-medium" id="balance-progress">8000/125000</span>
-       </div>
-       <div class="w-full bg-gray-700 rounded-full h-2">
-        <div class="progress-bar h-2 rounded-full" style="width: 6.4%"></div>
-       </div>
-      </div>
-      <div>
-       <div class="flex items-center justify-between mb-1"><span class="text-sm">📅 Աշխատանքային օրեր</span> <span class="text-sm font-medium" id="days-progress">0/15</span>
-       </div>
-       <div class="w-full bg-gray-700 rounded-full h-2">
-        <div class="bg-gray-600 h-2 rounded-full" style="width: 0%"></div>
+       <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg p-4">
+        <h4 class="font-medium text-gray-800 mb-2">🏆 Ձեր մակարդակը</h4>
+        <div class="flex items-center space-x-3">
+         <div class="flex-1 bg-gray-200 rounded-full h-2">
+          <div class="bg-blue-500 h-2 rounded-full" style="width: 0%"></div>
+         </div><span class="text-sm font-medium text-blue-600">Սկսնակ</span>
+        </div>
        </div>
       </div>
      </div>
-    </section><!-- Support Section -->
-    <section class="bg-white bg-opacity-10 rounded-xl p-4 backdrop-filter backdrop-blur-lg">
-     <div class="flex items-center space-x-2 mb-4">
-      <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center"><span class="text-sm font-bold">S</span>
+    </div><!-- Video Section -->
+    <div id="video-section" class="section space-y-6">
+     <div class="bg-white rounded-xl p-6 card-shadow">
+      <div class="text-center mb-6">
+       <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-3xl">📺</span>
+       </div>
+       <h3 class="text-xl font-semibold text-gray-800 mb-2">Տեսանյութեր</h3>
+       <p class="text-gray-600">Դիտեք և վաստակեք</p>
       </div>
-      <div>
-       <h3 class="font-semibold">Contact Support</h3>
-       <p class="text-sm opacity-70">We're here to help</p>
+      <div class="space-y-4">
+       <div class="bg-gradient-to-r from-red-50 to-orange-50 rounded-lg p-4">
+        <div class="flex items-center justify-between mb-3">
+         <h4 class="font-medium text-gray-800">Մատչելի տեսանյութեր</h4><span class="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-medium">0 նոր</span>
+        </div>
+        <div class="text-center py-8">
+         <div class="text-gray-400 text-4xl mb-3">
+          🎬
+         </div>
+         <p class="text-gray-500 text-sm">Տեսանյութեր չկան</p>
+         <p class="text-gray-400 text-xs mt-1">Նոր տեսանյութեր շուտով կհասանելի լինեն</p>
+        </div>
+       </div>
+       <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4">
+        <h4 class="font-medium text-gray-800 mb-2">💰 Վաստակած գումար</h4>
+        <div class="text-center">
+         <div class="text-2xl font-bold text-green-600">
+          ֏0
+         </div>
+         <div class="text-sm text-gray-600">
+          Տեսանյութերից վաստակած
+         </div>
+        </div>
+       </div>
       </div>
      </div>
-     <form id="support-form" class="space-y-4">
-      <div><label for="full-name" class="block text-sm font-medium mb-1">Full Name *</label> <input type="text" id="full-name" class="w-full bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg px-3 py-2 text-white placeholder-gray-300" placeholder="John Smith" required>
+    </div><!-- Cashout Section -->
+    <div id="cashout-section" class="section space-y-6"><!-- Header -->
+     <div class="bg-white rounded-xl p-4 card-shadow">
+      <div class="flex items-center justify-between mb-4">
+       <h3 class="text-lg font-semibold text-gray-800">Ելքագրել գումար</h3><button class="text-gray-400 hover:text-gray-600">✕</button>
+      </div><!-- Available Balance -->
+      <div class="text-center mb-4">
+       <h4 class="text-sm text-gray-600 mb-1">Հասանելի մնացորդ</h4>
+       <div class="text-2xl font-bold text-green-600">
+        ֏8,000
+       </div>
       </div>
-      <div><label for="email" class="block text-sm font-medium mb-1">Email Address *</label> <input type="email" id="email" class="w-full bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg px-3 py-2 text-white placeholder-gray-300" placeholder="john@company.com" required>
+      <h4 class="font-medium text-gray-800 mb-3">Ընտրեք ելքագրման եղանակը</h4><!-- Warning -->
+      <div class="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-4">
+       <div class="flex items-start space-x-2"><span class="text-orange-500 text-sm">⚠️</span>
+        <div class="text-sm text-orange-700">
+         Դեպոզիտ չարած օգտատերերը չեն կարող կատարել withdrawal ձեր պրոֆիլը ակտիվ չի
+        </div>
+       </div>
       </div>
-      <div><label for="message" class="block text-sm font-medium mb-1">How can we help you? *</label> <textarea id="message" rows="3" class="w-full bg-white bg-opacity-20 border border-white border-opacity-30 rounded-lg px-3 py-2 text-white placeholder-gray-300 resize-none" placeholder="Please provide details about your inquiry or issue..." required></textarea>
-      </div><button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-medium transition-colors"> Send Message </button>
-     </form>
-    </section>
+     </div><!-- Payment Methods -->
+     <div class="space-y-3"><!-- DASH PRO -->
+      <div class="bg-white rounded-xl p-4 card-shadow">
+       <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+         <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center"><span class="text-white text-sm font-bold">✓</span>
+         </div>
+         <div>
+          <div class="font-semibold text-gray-800">
+           DASH PRO
+          </div>
+          <div class="text-xs text-gray-600">
+           Պրոֆեսիոնալ ելքագրման համակարգ
+          </div>
+          <div class="flex items-center space-x-2 mt-1"><span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded">Ակնթարթային</span> <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">Անվտանգ</span> <span class="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded">Պրեմիում</span>
+          </div>
+         </div>
+        </div>
+        <div class="text-right">
+         <div class="flex items-center space-x-1"><span class="text-lg">🚀</span> <span class="text-sm font-medium text-green-600">Ակտիվ</span>
+         </div>
+         <div class="text-xs text-gray-500">
+          0% Հարկ
+         </div>
+        </div>
+       </div>
+      </div><!-- EasyPay -->
+      <div class="bg-white rounded-xl p-3 card-shadow">
+       <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+         <div class="w-6 h-6 bg-orange-500 rounded flex items-center justify-center"><span class="text-white text-xs">E</span>
+         </div>
+         <div>
+          <div class="font-medium text-gray-800">
+           EasyPay
+          </div>
+          <div class="text-xs text-gray-600">
+           Մոբայլ վճարում
+          </div>
+         </div>
+        </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
+       </div>
+      </div><!-- Idram -->
+      <div class="bg-white rounded-xl p-3 card-shadow">
+       <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+         <div class="w-6 h-6 bg-red-500 rounded flex items-center justify-center"><span class="text-white text-xs">I</span>
+         </div>
+         <div>
+          <div class="font-medium text-gray-800">
+           Idram
+          </div>
+          <div class="text-xs text-gray-600">
+           Էլեկտրոնային դրամապանակ
+          </div>
+         </div>
+        </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
+       </div>
+      </div><!-- ArCa -->
+      <div class="bg-white rounded-xl p-3 card-shadow">
+       <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+         <div class="w-6 h-6 bg-blue-500 rounded flex items-center justify-center"><span class="text-white text-xs">A</span>
+         </div>
+         <div>
+          <div class="font-medium text-gray-800">
+           ArCa
+          </div>
+          <div class="text-xs text-gray-600">
+           Հայկական քարտային համակարգ
+          </div>
+         </div>
+        </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
+       </div>
+      </div><!-- Banks -->
+      <div class="bg-white rounded-xl p-3 card-shadow">
+       <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+         <div class="w-6 h-6 bg-green-600 rounded flex items-center justify-center"><span class="text-white text-xs">🏦</span>
+         </div>
+         <div>
+          <div class="font-medium text-gray-800">
+           ԱմերիաԲանկ
+          </div>
+          <div class="text-xs text-gray-600">
+           Բանկային փոխանցում
+          </div>
+         </div>
+        </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
+       </div>
+      </div>
+      <div class="bg-white rounded-xl p-3 card-shadow">
+       <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+         <div class="w-6 h-6 bg-purple-600 rounded flex items-center justify-center"><span class="text-white text-xs">🏦</span>
+         </div>
+         <div>
+          <div class="font-medium text-gray-800">
+           ԱրդշինԲանկ
+          </div>
+          <div class="text-xs text-gray-600">
+           Բանկային փոխանցում
+          </div>
+         </div>
+        </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
+       </div>
+      </div>
+      <div class="bg-white rounded-xl p-3 card-shadow">
+       <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+         <div class="w-6 h-6 bg-red-600 rounded flex items-center justify-center"><span class="text-white text-xs">🏦</span>
+         </div>
+         <div>
+          <div class="font-medium text-gray-800">
+           ԱԿԲԱ Բանկ
+          </div>
+          <div class="text-xs text-gray-600">
+           Բանկային փոխանցում
+          </div>
+         </div>
+        </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
+       </div>
+      </div>
+      <div class="bg-white rounded-xl p-3 card-shadow">
+       <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+         <div class="w-6 h-6 bg-blue-700 rounded flex items-center justify-center"><span class="text-white text-xs">🏦</span>
+         </div>
+         <div>
+          <div class="font-medium text-gray-800">
+           Կոնվերս Բանկ
+          </div>
+          <div class="text-xs text-gray-600">
+           Բանկային փոխանցում
+          </div>
+         </div>
+        </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
+       </div>
+      </div><!-- Crypto -->
+      <div class="bg-white rounded-xl p-3 card-shadow">
+       <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+         <div class="w-6 h-6 bg-orange-500 rounded flex items-center justify-center"><span class="text-white text-xs">₿</span>
+         </div>
+         <div>
+          <div class="font-medium text-gray-800">
+           Bitcoin (BTC)
+          </div>
+          <div class="text-xs text-gray-600">
+           Կրիպտո ելքագրում
+          </div>
+         </div>
+        </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
+       </div>
+      </div><!-- USDT Selected -->
+      <div class="bg-green-50 border-2 border-green-500 rounded-xl p-3 card-shadow">
+       <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+         <div class="w-6 h-6 bg-green-600 rounded flex items-center justify-center"><span class="text-white text-xs">₮</span>
+         </div>
+         <div>
+          <div class="font-medium text-gray-800">
+           USDT (TRC20)
+          </div>
+          <div class="text-xs text-gray-600">
+           Կրիպտո ելքագրում
+          </div>
+         </div>
+        </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
+       </div>
+      </div>
+     </div><!-- Withdrawal Form -->
+     <div class="bg-white rounded-xl p-4 card-shadow">
+      <form id="withdrawal-form" class="space-y-4">
+       <div><label for="amount" class="block text-sm font-medium text-gray-700 mb-1">Գումարը (֏)</label> <input type="number" id="amount" name="amount" placeholder="Մուտքագրեք գումարը" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+        <div class="text-xs text-gray-500 mt-1">
+         Նվազագույնը ֏125,000
+        </div>
+       </div>
+       <div><label for="wallet-address" class="block text-sm font-medium text-gray-700 mb-1">USDT TRC20 հասցե</label> <input type="text" id="wallet-address" name="wallet-address" placeholder="Մուտքագրեք Ձեր USDT TRC20 wallet հասցեն:" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+       </div>
+       <div><label class="block text-sm font-medium text-gray-700 mb-1">USDT Wallet հասցե</label>
+        <div class="bg-gray-50 p-3 rounded-lg border">
+         <div class="text-sm text-gray-800 font-mono break-all">
+          TQn9Y2khEsLMWD7fhRRHMbnqmS9aGHMeyn
+         </div>
+        </div>
+       </div><button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-medium transition-colors"> Ելքագրել գումար </button>
+      </form>
+      <div id="withdrawal-success" class="hidden mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+       <div class="flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg> Ելքագրման հայտը հաջողությամբ ուղարկվեց! Գումարը կմուտքագրվի 15 աշխատանքային օրվա ընթացքում:
+       </div>
+      </div>
+     </div>
+    </div>
    </main><!-- Bottom Navigation -->
-   <nav class="bg-black bg-opacity-30 p-2">
-    <div class="flex justify-around"><button class="nav-btn flex flex-col items-center p-2 rounded-lg transition-colors" data-tab="home"> <span class="text-lg mb-1">🏠</span> <span id="nav-home" class="text-xs">Գլխավոր</span> </button> <button class="nav-btn flex flex-col items-center p-2 rounded-lg transition-colors" data-tab="invite"> <span class="text-lg mb-1">👥</span> <span id="nav-invite" class="text-xs">Հրավեր</span> </button> <button class="nav-btn flex flex-col items-center p-2 rounded-lg transition-colors" data-tab="center"> <span class="text-lg mb-1">🎯</span> <span id="nav-center" class="text-xs">Կենտրոն</span> </button> <button class="nav-btn flex flex-col items-center p-2 rounded-lg transition-colors" data-tab="video"> <span class="text-lg mb-1">📺</span> <span id="nav-video" class="text-xs">Տեսանյութ</span> </button> <button class="nav-btn nav-active flex flex-col items-center p-2 rounded-lg transition-colors" data-tab="cash"> <span class="text-lg mb-1">💰</span> <span id="nav-cash" class="text-xs">Կանխիկ</span> </button>
+   <nav class="gradient-bg text-white p-4 mt-8">
+    <div class="max-w-md mx-auto">
+     <div class="flex justify-around"><button class="nav-item active flex flex-col items-center space-y-1 px-3 py-2 rounded-lg" data-section="home"> <span class="text-lg">🏠</span> <span class="text-xs">Գլխավոր</span> </button> <button class="nav-item flex flex-col items-center space-y-1 px-3 py-2 rounded-lg" data-section="referral"> <span class="text-lg">👥</span> <span class="text-xs">Հրավեր</span> </button> <button class="nav-item flex flex-col items-center space-y-1 px-3 py-2 rounded-lg" data-section="center"> <span class="text-lg">🎯</span> <span class="text-xs">Կենտրոն</span> </button> <button class="nav-item flex flex-col items-center space-y-1 px-3 py-2 rounded-lg" data-section="video"> <span class="text-lg">📺</span> <span class="text-xs">Տեսանյութ</span> </button> <button class="nav-item flex flex-col items-center space-y-1 px-3 py-2 rounded-lg" data-section="cashout"> <span class="text-lg">💰</span> <span class="text-xs">Կանխիկ</span> </button>
+     </div>
     </div>
    </nav>
-  </div><!-- Add Transaction Modal -->
-  <div id="add-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
-   <div class="bg-white rounded-xl p-6 w-full max-w-md">
-    <h3 class="text-lg font-semibold text-gray-800 mb-4">Ավելացնել գործարք</h3>
-    <form id="add-transaction-form" class="space-y-4">
-     <div><label for="transaction-type" class="block text-sm font-medium text-gray-700 mb-1">Տեսակ</label> <select id="transaction-type" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-800" required> <option value="bonus">Բոնուս</option> <option value="deposit">Ավանդ</option> <option value="withdrawal">Ելքագրում</option> </select>
-     </div>
-     <div><label for="transaction-amount" class="block text-sm font-medium text-gray-700 mb-1">Գումար (֏)</label> <input type="number" id="transaction-amount" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-800" placeholder="8000" required>
-     </div>
-     <div><label for="transaction-description" class="block text-sm font-medium text-gray-700 mb-1">Նկարագրություն</label> <input type="text" id="transaction-description" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-800" placeholder="Բոնուս">
-     </div>
-     <div class="flex space-x-3 pt-2"><button type="button" id="cancel-add" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 rounded-lg font-medium transition-colors"> Չեղարկել </button> <button type="submit" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-medium transition-colors"> Ավելացնել </button>
-     </div>
-    </form>
-   </div>
   </div>
   <script>
-        // Configuration
         const defaultConfig = {
-            app_title: "RichLab",
-            demo_label: "Դեմո",
-            cash_label: "Կանխիկ",
-            current_balance_label: "Ընթացիկ մնացորդ",
-            crypto_label: "Կրիպտո մնացորդներ",
-            nav_home: "Գլխավոր",
-            nav_invite: "Հրավեր",
-            nav_center: "Կենտրոն",
-            nav_video: "Տեսանյութ",
-            nav_cash: "Կանխիկ",
-            background_color: "#667eea",
-            surface_color: "#ffffff",
-            text_color: "#ffffff",
-            primary_action_color: "#10b981",
-            secondary_action_color: "#3b82f6",
-            font_family: "Inter",
-            font_size: 16
+            platform_name: "RichLab",
+            demo_text: "Դեմո",
+            total_balance: "8,000",
+            add_money_text: "Ավելացրեք գումար և սկսեք վաստակել",
+            support_title: "Contact Support",
+            support_subtitle: "We're here to help"
         };
 
-        // State
-        let currentBalance = 8000;
-        let transactions = [];
-        let isHistoryExpanded = false;
-
-        // Data SDK Handler
-        const dataHandler = {
-            onDataChanged(data) {
-                transactions = data;
-                renderTransactions();
-                updateBalance();
-            }
-        };
-
-        // Element SDK Configuration
         async function onConfigChange(config) {
-            const customFont = config.font_family || defaultConfig.font_family;
-            const baseSize = config.font_size || defaultConfig.font_size;
-            const baseFontStack = 'system-ui, -apple-system, sans-serif';
-
-            // Update text content
-            document.getElementById('app-title').textContent = config.app_title || defaultConfig.app_title;
-            document.getElementById('demo-badge').textContent = config.demo_label || defaultConfig.demo_label;
-            document.getElementById('cash-title').textContent = config.cash_label || defaultConfig.cash_label;
-            document.getElementById('balance-label').textContent = config.current_balance_label || defaultConfig.current_balance_label;
-            document.getElementById('crypto-title').textContent = config.crypto_label || defaultConfig.crypto_label;
-            document.getElementById('nav-home').textContent = config.nav_home || defaultConfig.nav_home;
-            document.getElementById('nav-invite').textContent = config.nav_invite || defaultConfig.nav_invite;
-            document.getElementById('nav-center').textContent = config.nav_center || defaultConfig.nav_center;
-            document.getElementById('nav-video').textContent = config.nav_video || defaultConfig.nav_video;
-            document.getElementById('nav-cash').textContent = config.nav_cash || defaultConfig.nav_cash;
-
-            // Apply font family
-            document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
-
-            // Apply font sizes
-            document.getElementById('app-title').style.fontSize = `${baseSize * 1.25}px`;
-            document.querySelectorAll('h2').forEach(h => h.style.fontSize = `${baseSize * 1.125}px`);
-            document.querySelectorAll('h3').forEach(h => h.style.fontSize = `${baseSize * 1.0625}px`);
-            document.body.style.fontSize = `${baseSize}px`;
-            document.querySelectorAll('.text-sm').forEach(el => el.style.fontSize = `${baseSize * 0.875}px`);
-            document.querySelectorAll('.text-xs').forEach(el => el.style.fontSize = `${baseSize * 0.75}px`);
-
-            // Apply colors
-            const bgColor = config.background_color || defaultConfig.background_color;
-            const surfaceColor = config.surface_color || defaultConfig.surface_color;
-            const textColor = config.text_color || defaultConfig.text_color;
-            const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
-            const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
-
-            document.body.style.background = `linear-gradient(135deg, ${bgColor} 0%, #764ba2 100%)`;
-            document.body.style.color = textColor;
-            
-            document.querySelectorAll('.bg-green-500').forEach(el => {
-                el.style.backgroundColor = primaryColor;
-            });
-            
-            document.querySelectorAll('.bg-blue-500').forEach(el => {
-                el.style.backgroundColor = secondaryColor;
-            });
+            document.getElementById('platform-name').textContent = config.platform_name || defaultConfig.platform_name;
+            document.getElementById('demo-text').textContent = config.demo_text || defaultConfig.demo_text;
+            document.getElementById('total-balance').textContent = config.total_balance || defaultConfig.total_balance;
+            document.getElementById('add-money-text').textContent = config.add_money_text || defaultConfig.add_money_text;
+            document.getElementById('support-title').textContent = config.support_title || defaultConfig.support_title;
+            document.getElementById('support-subtitle').textContent = config.support_subtitle || defaultConfig.support_subtitle;
         }
 
-        const capabilities = {
-            recolorables: [
-                {
-                    get: () => window.elementSdk?.config?.background_color || defaultConfig.background_color,
-                    set: (value) => {
-                        if (window.elementSdk) {
-                            window.elementSdk.setConfig({ background_color: value });
-                        }
-                    }
-                },
-                {
-                    get: () => window.elementSdk?.config?.surface_color || defaultConfig.surface_color,
-                    set: (value) => {
-                        if (window.elementSdk) {
-                            window.elementSdk.setConfig({ surface_color: value });
-                        }
-                    }
-                },
-                {
-                    get: () => window.elementSdk?.config?.text_color || defaultConfig.text_color,
-                    set: (value) => {
-                        if (window.elementSdk) {
-                            window.elementSdk.setConfig({ text_color: value });
-                        }
-                    }
-                },
-                {
-                    get: () => window.elementSdk?.config?.primary_action_color || defaultConfig.primary_action_color,
-                    set: (value) => {
-                        if (window.elementSdk) {
-                            window.elementSdk.setConfig({ primary_action_color: value });
-                        }
-                    }
-                },
-                {
-                    get: () => window.elementSdk?.config?.secondary_action_color || defaultConfig.secondary_action_color,
-                    set: (value) => {
-                        if (window.elementSdk) {
-                            window.elementSdk.setConfig({ secondary_action_color: value });
-                        }
-                    }
-                }
-            ],
-            borderables: [],
-            fontEditable: {
-                get: () => window.elementSdk?.config?.font_family || defaultConfig.font_family,
-                set: (value) => {
-                    if (window.elementSdk) {
-                        window.elementSdk.setConfig({ font_family: value });
-                    }
-                }
-            },
-            fontSizeable: {
-                get: () => window.elementSdk?.config?.font_size || defaultConfig.font_size,
-                set: (value) => {
-                    if (window.elementSdk) {
-                        window.elementSdk.setConfig({ font_size: value });
-                    }
-                }
-            }
-        };
+        function mapToCapabilities(config) {
+            return {
+                recolorables: [],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+            };
+        }
 
         function mapToEditPanelValues(config) {
             return new Map([
-                ["app_title", config.app_title || defaultConfig.app_title],
-                ["demo_label", config.demo_label || defaultConfig.demo_label],
-                ["cash_label", config.cash_label || defaultConfig.cash_label],
-                ["current_balance_label", config.current_balance_label || defaultConfig.current_balance_label],
-                ["crypto_label", config.crypto_label || defaultConfig.crypto_label],
-                ["nav_home", config.nav_home || defaultConfig.nav_home],
-                ["nav_invite", config.nav_invite || defaultConfig.nav_invite],
-                ["nav_center", config.nav_center || defaultConfig.nav_center],
-                ["nav_video", config.nav_video || defaultConfig.nav_video],
-                ["nav_cash", config.nav_cash || defaultConfig.nav_cash]
+                ["platform_name", config.platform_name || defaultConfig.platform_name],
+                ["demo_text", config.demo_text || defaultConfig.demo_text],
+                ["total_balance", config.total_balance || defaultConfig.total_balance],
+                ["add_money_text", config.add_money_text || defaultConfig.add_money_text],
+                ["support_title", config.support_title || defaultConfig.support_title],
+                ["support_subtitle", config.support_subtitle || defaultConfig.support_subtitle]
             ]);
         }
 
-        // Functions
-        function renderTransactions() {
-            const container = document.getElementById('transaction-list');
-            
-            if (transactions.length === 0) {
-                container.innerHTML = `
-                    <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center opacity-70">
-                        <p class="text-sm">Գործարքներ չկան</p>
-                    </div>
-                `;
-                return;
-            }
-
-            const visibleTransactions = isHistoryExpanded ? transactions : transactions.slice(0, 3);
-            
-            container.innerHTML = visibleTransactions.map(transaction => `
-                <div class="bg-white bg-opacity-10 rounded-lg p-3 flex justify-between items-center">
-                    <div>
-                        <p class="font-medium">${transaction.description}</p>
-                        <p class="text-sm opacity-70">${transaction.type} • ${new Date(transaction.date).toLocaleDateString('hy-AM')}</p>
-                    </div>
-                    <p class="font-semibold ${transaction.amount > 0 ? 'text-green-400' : 'text-red-400'}">
-                        ${transaction.amount > 0 ? '+' : ''}֏${Math.abs(transaction.amount).toLocaleString()}
-                    </p>
-                </div>
-            `).join('');
-
-            if (transactions.length > 3) {
-                const toggleBtn = document.getElementById('history-toggle');
-                toggleBtn.textContent = isHistoryExpanded ? '↑' : '↓';
-            }
-        }
-
-        function updateBalance() {
-            const totalBalance = transactions.reduce((sum, t) => sum + t.amount, 8000);
-            currentBalance = totalBalance;
-            document.getElementById('balance-amount').textContent = `֏${totalBalance.toLocaleString()}`;
-            document.getElementById('balance-progress').textContent = `${totalBalance}/125000`;
-            
-            const progressPercent = Math.min((totalBalance / 125000) * 100, 100);
-            document.querySelector('.progress-bar').style.width = `${progressPercent}%`;
-        }
-
-        async function addTransaction(type, amount, description) {
-            if (transactions.length >= 999) {
-                showNotification('Գործարքների սահմանը (999) հասել է:', 'error');
-                return;
-            }
-
-            const loadingBtn = document.querySelector('#add-transaction-form button[type="submit"]');
-            const originalText = loadingBtn.textContent;
-            loadingBtn.textContent = 'Ավելացվում է...';
-            loadingBtn.disabled = true;
-
-            const transaction = {
-                id: Date.now().toString(),
-                type: type,
-                amount: amount,
-                description: description,
-                date: new Date().toISOString(),
-                currency: 'AMD'
-            };
-
-            const result = await window.dataSdk.create(transaction);
-            
-            loadingBtn.textContent = originalText;
-            loadingBtn.disabled = false;
-
-            if (result.isOk) {
-                document.getElementById('add-modal').classList.add('hidden');
-                document.getElementById('add-transaction-form').reset();
-                showNotification('Գործարքը հաջողությամբ ավելացվեց', 'success');
-            } else {
-                showNotification('Սխալ՝ գործարքը չավելացվեց', 'error');
-            }
-        }
-
-        function showNotification(message, type) {
-            const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 p-4 rounded-lg text-white z-50 ${
-                type === 'success' ? 'bg-green-500' : 'bg-red-500'
-            }`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
-
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Initialize SDKs
-            if (window.dataSdk) {
-                const initResult = await window.dataSdk.init(dataHandler);
-                if (!initResult.isOk) {
-                    console.error('Failed to initialize data SDK');
-                }
-            }
-
-            if (window.elementSdk) {
-                window.elementSdk.init({
-                    defaultConfig,
-                    onConfigChange,
-                    mapToCapabilities: () => capabilities,
-                    mapToEditPanelValues
-                });
-            }
-
-            // Add transaction modal
-            document.getElementById('add-btn').addEventListener('click', () => {
-                document.getElementById('add-modal').classList.remove('hidden');
-                document.getElementById('add-modal').classList.add('flex');
+        // Stable navigation system
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
             });
+            
+            // Show the selected section
+            const targetSection = document.getElementById(sectionName + '-section');
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+        }
 
-            document.getElementById('add-cash-btn').addEventListener('click', () => {
-                document.getElementById('add-modal').classList.remove('hidden');
-                document.getElementById('add-modal').classList.add('flex');
-                document.getElementById('transaction-type').value = 'bonus';
-            });
-
-            document.getElementById('cancel-add').addEventListener('click', () => {
-                document.getElementById('add-modal').classList.add('hidden');
-                document.getElementById('add-modal').classList.remove('flex');
-            });
-
-            // Add transaction form
-            document.getElementById('add-transaction-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const type = document.getElementById('transaction-type').value;
-                const amount = parseInt(document.getElementById('transaction-amount').value);
-                const description = document.getElementById('transaction-description').value || type;
+        // Navigation event listeners
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Update active state
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
                 
-                await addTransaction(type, amount, description);
-            });
-
-            // History toggle
-            document.getElementById('history-toggle').addEventListener('click', () => {
-                isHistoryExpanded = !isHistoryExpanded;
-                renderTransactions();
-            });
-
-            // Navigation
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
-                    btn.classList.add('nav-active');
-                });
-            });
-
-            // Support form
-            document.getElementById('support-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                showNotification('Հաղորդագրությունը ուղարկվեց', 'success');
-                e.target.reset();
-            });
-
-            // Withdraw button
-            document.getElementById('withdraw-btn').addEventListener('click', () => {
-                if (currentBalance < 125000) {
-                    showNotification('Ելքագրման համար անհրաժեշտ է նվազագույնը ֏125,000', 'error');
-                } else {
-                    showNotification('Ելքագրման հարցումը ուղարկվեց', 'success');
-                }
-            });
-
-            // Close modal on outside click
-            document.getElementById('add-modal').addEventListener('click', (e) => {
-                if (e.target === e.currentTarget) {
-                    document.getElementById('add-modal').classList.add('hidden');
-                    document.getElementById('add-modal').classList.remove('flex');
-                }
+                // Show the corresponding section
+                const sectionName = this.getAttribute('data-section');
+                showSection(sectionName);
             });
         });
+
+        // Help guide functionality
+        function closeHelpGuide() {
+            document.getElementById('help-guide').style.display = 'none';
+        }
+
+        // Referral functionality
+        function copyReferralLink() {
+            const link = "https://t.me/richcdrise_bot/app?startapp=r_";
+            navigator.clipboard.writeText(link).then(() => {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = "Պատճենված!";
+                button.classList.add('bg-green-600');
+                button.classList.remove('bg-blue-600');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('bg-green-600');
+                    button.classList.add('bg-blue-600');
+                }, 2000);
+            });
+        }
+
+        function shareToTelegram() {
+            const text = "Միացեք RichRise-ին և սկսեք վաստակել! Օգտագործեք իմ հղումը:";
+            const url = "https://t.me/richcdrise_bot/app?startapp=r_";
+            const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+            window.open(telegramUrl, '_blank', 'noopener,noreferrer');
+        }
+
+        function shareToWhatsApp() {
+            const text = "Միացեք RichRise-ին և սկսեք վաստակել! Օգտագործեք իմ հղումը: https://t.me/richcdrise_bot/app?startapp=r_";
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+        }
+
+        // Support form functionality
+        document.getElementById('support-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const fullName = formData.get('fullName');
+            const email = formData.get('email');
+            const message = formData.get('message');
+            
+            if (fullName && email && message) {
+                this.style.display = 'none';
+                document.getElementById('form-success').classList.remove('hidden');
+                
+                setTimeout(() => {
+                    this.reset();
+                    this.style.display = 'block';
+                    document.getElementById('form-success').classList.add('hidden');
+                }, 3000);
+            }
+        });
+
+        // Withdrawal form functionality
+        document.getElementById('withdrawal-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const amount = formData.get('amount');
+            const walletAddress = formData.get('wallet-address');
+            
+            if (amount && walletAddress) {
+                // Validate minimum amount
+                if (parseFloat(amount) < 125000) {
+                    // Show error message inline
+                    const amountField = document.getElementById('amount');
+                    amountField.style.borderColor = '#ef4444';
+                    amountField.focus();
+                    return;
+                }
+                
+                // Reset border color
+                document.getElementById('amount').style.borderColor = '';
+                
+                // Hide form and show success message
+                this.style.display = 'none';
+                document.getElementById('withdrawal-success').classList.remove('hidden');
+                
+                // Reset form after 5 seconds
+                setTimeout(() => {
+                    this.reset();
+                    this.style.display = 'block';
+                    document.getElementById('withdrawal-success').classList.add('hidden');
+                }, 5000);
+            }
+        });
+
+        // Initialize Element SDK
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities,
+                mapToEditPanelValues
+            });
+        }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'997eef6b70f36e9c',t:'MTc2MjAzNzI2MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'997f3e03a56f6e9c',t:'MTc2MjA0MDQ3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
