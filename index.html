@@ -1,86 +1,5 @@
+
 <!DOCTYPE html>
-<html lang="hy">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RichLab - Բացեք եկամտի հնարավորություններ</title>
-
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    .fade-out {
-      animation: fadeOut 1s ease-out forwards;
-    }
-
-    @keyframes fadeOut {
-      to { opacity: 0; visibility: hidden; }
-    }
-
-    .loader {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      text-align: center;
-    }
-
-    .spinner {
-      width: 60px;
-      height: 60px;
-      border: 6px solid rgba(255, 255, 255, 0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    h1 {
-      font-size: 2rem;
-      font-weight: 700;
-    }
-
-    p {
-      font-size: 1.2rem;
-      opacity: 0.9;
-    }
-  </style>
-</head>
-<body>
-  <div id="loader" class="loader">
-    <div class="spinner"></div>
-    <div class="text-6xl">🚀</div>
-    <h1>RichLab</h1>
-    <p>Բացեք եկամտի հնարավորություններ</p>
-    <p style="opacity:0.8;">Մուտք գործում...</p>
-  </div>
-
-  <script>
-    // ⏳ 3 վայրկյան հետո՝ անցում դեպի քո Telegram Mini App
-    setTimeout(() => {
-      document.getElementById('loader').classList.add('fade-out');
-      setTimeout(() => {
-        // բացում է քո mini app-ը
-        window.location.replace("https://t.me/BirdsGolden_bot?start=app");
-      }, 1000);
-    }, 3000);
-  </script>
-</body>
-</html>
 <html lang="hy">
 <head>
     <meta charset="UTF-8">
@@ -1086,27 +1005,30 @@
     <div class="text-6xl mb-6 rocket-float scale-in">
      🚀
     </div>
-    <h1 class="text-3xl font-bold mb-4 title-glow slide-up delay-1">RichLab</h1>
-    <p class="text-xl mb-8 opacity-90 fade-in delay-2">Բացեք եկամտի հնարավորություններ</p>
-    <div id="login-content" class="bounce-in delay-3"><button onclick="loginWithTelegram()" class="pulse-button bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg mb-4 w-full max-w-sm"> <span class="mr-2">📱</span> Մուտք Telegram-ով </button>
-     <p class="text-sm opacity-75 fade-in delay-4">Անվտանգ և արագ մուտք</p>
-    </div>
-    <div id="login-loading" class="hidden">
-     <div class="loading-spinner w-8 h-8 border-4 border-white border-t-transparent rounded-full mx-auto mb-4"></div>
-     <p class="text-lg loading-text">Մուտք գործում...</p>
-    </div>
-   </div>
-  </div>
-  <script>
-        // Initialize animations when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add some interactive sparkle effects on mouse move
-            document.addEventListener('mousemove', function(e) {
-                if (Math.random() > 0.95) {
-                    createSparkle(e.clientX, e.clientY);
-                }
-            });
-        });
+    <script>
+function loginWithTelegram() {
+    const loginContent = document.getElementById('login-content');
+    const loginLoading = document.getElementById('login-loading');
+
+    // Անջատում ենք login բաժինը, ցույց ենք տալիս loading-ը
+    loginContent.classList.add('hidden');
+    loginLoading.classList.remove('hidden');
+
+    // Փոքր անիմացիա՝ smoother transition-ի համար
+    loginLoading.style.opacity = 0;
+    setTimeout(() => {
+        loginLoading.style.transition = 'opacity 0.6s ease-in';
+        loginLoading.style.opacity = 1;
+    }, 100);
+
+    // ⏳ 2.5 վայրկյանից հետո բացում ենք Telegram Mini App-ը
+    setTimeout(() => {
+        // Բացում է քո բոտը որպես mini app
+        window.location.replace("https://t.me/BirdsGolden_bot?start=app");
+    }, 2500);
+}
+</script>
+
 
         function createSparkle(x, y) {
             // Create multiple money sparkles
