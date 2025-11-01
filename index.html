@@ -1,5 +1,86 @@
-
 <!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RichLab - Բացեք եկամտի հնարավորություններ</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .fade-out {
+      animation: fadeOut 1s ease-out forwards;
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    .loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div id="loader" class="loader">
+    <div class="spinner"></div>
+    <div class="text-6xl">🚀</div>
+    <h1>RichLab</h1>
+    <p>Բացեք եկամտի հնարավորություններ</p>
+    <p style="opacity:0.8;">Մուտք գործում...</p>
+  </div>
+
+  <script>
+    // ⏳ 3 վայրկյան հետո՝ անցում դեպի քո Telegram Mini App
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('fade-out');
+      setTimeout(() => {
+        // բացում է քո mini app-ը
+        window.location.replace("https://t.me/BirdsGolden_bot?start=app");
+      }, 1000);
+    }, 3000);
+  </script>
+</body>
+</html>
 <html lang="hy">
 <head>
     <meta charset="UTF-8">
