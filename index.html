@@ -5403,40 +5403,108 @@ document.addEventListener("DOMContentLoaded", () => {
     </script>
  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'996331895246ddcd',t:'MTc2MTc0NjM2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
  </body>
-<script>
-function loginWithTelegram() {
-  const botName = "BirdsGolden_bot"; // քո բոտի անունը
-  const loginContent = document.getElementById('login-content');
-  const loginLoading = document.getElementById('login-loading');
+<!doctype html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RichLab - Բացեք եկամտի հնարավորություններ</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+    }
+    .hidden { display: none; }
 
-  if (loginContent) {
-    loginContent.style.animation = 'fadeOut 0.3s ease-out forwards';
-    setTimeout(() => {
-      loginContent.classList.add('hidden');
-      if (loginLoading) {
+    @keyframes fadeOut { from {opacity:1;} to {opacity:0;} }
+    @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+
+    .fadeOut { animation: fadeOut 0.3s ease-out forwards; }
+    .fadeIn { animation: fadeIn 0.4s ease-in forwards; }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      margin: 20px auto;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { from {transform: rotate(0);} to {transform: rotate(360deg);} }
+
+    .btn {
+      background: white;
+      color: #2563eb;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 32px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="login-content">
+    <div style="font-size:64px;">🚀</div>
+    <h1 style="font-size:32px;margin-bottom:10px;">RichLab</h1>
+    <p style="opacity:0.9;font-size:18px;">Բացեք եկամտի հնարավորություններ</p>
+    <button class="btn" onclick="loginWithTelegram()">📱 Մուտք Telegram-ով</button>
+    <p style="opacity:0.75;font-size:14px;">Անվտանգ և արագ մուտք</p>
+  </div>
+
+  <div id="login-loading" class="hidden">
+    <div class="loading-spinner"></div>
+    <p style="font-size:18px;">Մուտք գործում...</p>
+  </div>
+
+  <script>
+    function loginWithTelegram() {
+      const botName = "BirdsGolden_bot";
+      const loginContent = document.getElementById('login-content');
+      const loginLoading = document.getElementById('login-loading');
+
+      loginContent.classList.add('fadeOut');
+      setTimeout(() => {
+        loginContent.classList.add('hidden');
         loginLoading.classList.remove('hidden');
-        loginLoading.style.animation = 'fadeIn 0.5s ease-in forwards';
-      }
-    }, 300);
-  }
+        loginLoading.classList.add('fadeIn');
+      }, 300);
 
-  const deepLink = `tg://resolve?domain=${botName}&start=app`;
-  const webFallback = `https://t.me/${botName}/app`;
+      // Telegram deep link
+      const deepLink = `tg://resolve?domain=${botName}&start=app`;
+      const webFallback = `https://t.me/${botName}/app`;
 
-  function tryOpenDeepLink() {
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = deepLink;
-    document.body.appendChild(iframe);
+      // Եթե բացվում է Telegram-ի ներսում՝ ուղղակի փոխեք location-ը
+      const ua = navigator.userAgent.toLowerCase();
+      const isTelegram = ua.includes("telegram");
 
-    setTimeout(() => {
-      try { document.body.removeChild(iframe); } catch (e) {}
-      window.location.href = webFallback;
-    }, 900);
-  }
-
-  setTimeout(tryOpenDeepLink, 600);
-}
-</script>
+      setTimeout(() => {
+        if (isTelegram) {
+          // Telegram-ի ներսում՝ ուղղակի բացել bot-ը
+          window.location.href = deepLink;
+        } else {
+          // Արտաքին բրաուզեր՝ deep link փորձ + fallback
+          const iframe = document.createElement('iframe');
+          iframe.style.display = 'none';
+          iframe.src = deepLink;
+          document.body.appendChild(iframe);
+          setTimeout(() => {
+            try { document.body.removeChild(iframe); } catch(e){}
+            window.location.href = webFallback;
+          }, 900);
+        }
+      }, 600);
+    }
+  </script>
 </body>
 </html>
