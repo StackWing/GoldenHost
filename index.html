@@ -3,11 +3,11 @@
 <html lang="hy">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RichLab - Բացեք եկամտի հնարավորություններ</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RichKZ - Բացեք եկամտի հնարավորություններ<title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <style>
         body {
             box-sizing: border-box;
             margin: 0;
@@ -693,29 +693,86 @@
             75% { transform: scale(1.2) rotateZ(-2deg); }
         }
     </style>
-</head>
-<body class="bg-gray-50 min-h-full">
-    <!-- Login Screen -->
-    <div id="login-screen" class="fixed inset-0 bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center z-50">
-        <div class="text-center text-white p-8">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT39Ld4zVMrJLAOy9Ltyh1kWvyRPsFWXKogGA&s" alt="">
-            <h1 class="text-3xl font-bold mb-4">RichLab</h1>
-            <p class="text-xl mb-8 opacity-90">Բացեք եկամտի հնարավորություններ</p>
-            
-            <div id="login-content">
-                <button onclick="loginWithTelegram()" class="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg mb-4 w-full max-w-sm">
-                    <span class="mr-2">📱</span>
-                    Մուտք Telegram-ով
-                </button>
-                <p class="text-sm opacity-75">Անվտանգ և արագ մուտք</p>
-            </div>
-            
-            <div id="login-loading" class="hidden">
-                <div class="loading-spinner w-8 h-8 border-4 border-white border-t-transparent rounded-full mx-auto mb-4"></div>
-                <p class="text-lg">Մուտք գործում...</p>
-            </div>
-        </div>
+</style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body><!-- Welcome Animation Screen -->
+  <div class="welcome-screen" id="welcomeScreen">
+   <div class="confetti-container">
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+    <div class="confetti"></div>
+   </div>
+   <div class="floating-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+   </div>
+   <div class="welcome-content">
+    <div class="welcome-emoji">
+     🎉
     </div>
+    <h1 class="welcome-title">RichKZ-ке қош келдіңіз!</h1>
+    <p class="welcome-subtitle">8 000 бонусыңызбен құттықтаймыз!</p>
+    <p class="welcome-description">Қарапайым тапсырмаларды орындау арқылы қазір ақша таба бастаңыз</p>
+    <div class="bonus-display">
+     <div class="bonus-amount">
+      + 8 000
+     </div>
+     <div class="bonus-label">
+      Бонус қосылды
+     </div>
+    </div><button class="start-button" onclick="startApp()"> Бастайық! 🚀 </button>
+   </div>
+  </div>
+  <div class="container" id="mainApp" style="display: none;">
+   <header class="header">
+    <div class="platform-name" id="platformName">
+     RichKZ
+    </div>
+    <div class="welcome-text" id="welcomeMessage">
+     АҚША МҮМКІНДІКТЕРІН АШУ
+    </div>
+   </header>
+   <div class="balance-section">
+    <div class="balance-amount" id="totalBalance">
+     ₱8,000
+    </div>
+    <div class="balance-label">
+     Kabuuang Kita
+    </div>
+    <div class="progress-container">
+     <div class="progress-bar">
+      <div class="progress-fill" id="dailyProgress" style="width: 80%"></div>
+     </div>
+     <div class="progress-text" id="progressText">
+      ₱8,000 / ₱10,000 araw-arawang target
+     </div>
+    </div>
+   </div>
 
     <!-- Mobile Header -->
     <header class="gradient-bg text-white py-4 sticky top-0 z-40">
