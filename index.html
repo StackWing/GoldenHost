@@ -855,40 +855,15 @@
                                 <!-- User Details -->
                                 <div>
                                     <div class="flex items-center space-x-2 mb-1">
-                                        <h3 class="text-xl font-bold cursor-pointer hover:text-yellow-200 hover:scale-105 transition-all duration-300" onclick="showProfileModal()"></h3>
+                                        <h3 class="text-xl font-bold cursor-pointer hover:text-yellow-200 hover:scale-105 transition-all duration-300" onclick="showProfileModal()">Դեմո</h3>
                                         <div class="bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full animate-pulse">PRO</div>
-                                    <!-- 🧑‍💼 Profile Avatar Section -->
-<div id="profile-section"
-    class="flex items-center space-x-3 bg-white/10 rounded-2xl p-3 mb-2 shadow-md cursor-pointer hover:bg-white/20 transition"
-    onclick="openProfileModal()">
-    <div id="profile-avatar" class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-xl">👤</div>
-    <div>
-        <div id="profile-name" class="text-sm font-semibold">Բեռնվում է...</div>
-        <div id="profile-id" class="text-xs opacity-80">ID: —</div>
-    </div>
-</div>
-
-<!-- 🌟 Profile Modal -->
-<div id="profile-modal"
-    class="fixed inset-0 bg-black/60 flex items-center justify-center hidden z-50">
-    <div class="bg-white rounded-2xl p-6 w-80 text-center relative">
-        <button onclick="closeProfileModal()"
-            class="absolute top-2 right-3 text-gray-500 hover:text-gray-800 text-xl">&times;</button>
-        
-        <div id="modal-avatar" class="w-20 h-20 mx-auto rounded-full bg-gray-200 flex items-center justify-center text-3xl mb-3">👤</div>
-        <h2 id="modal-name" class="text-lg font-bold mb-1">Օգտատեր</h2>
-        <p id="modal-id" class="text-sm text-gray-600 mb-3">ID: —</p>
-        
-        <div class="bg-yellow-100 text-yellow-800 rounded-xl p-3 mb-4 font-medium">
-            💰 Հաշվեկշիռ՝ <span id="modal-balance">0 դրամ</span>
-        </div>
-        
-        <button onclick="logoutUser()"
-            class="w-full bg-red-500 hover:bg-red-600 text-white rounded-xl py-2 font-semibold transition">Դուրս գալ</button>
-    </div>
-</div>
-
-
+                                    </div>
+                                    <div class="flex items-center space-x-3 text-sm opacity-90">
+                                        <span class="cursor-pointer hover:text-yellow-200 hover:scale-105 transition-all duration-300 bg-white/10 px-2 py-1 rounded-full" onclick="showDepositModal()">+ Ավելացնել</span>
+                                        <span class="text-xs opacity-75">•</span>  
+                                    </div>
+                                </div>
+                            </div>
                         <!-- Ձեր գոյություն ունեցող div -->
                         <div id="user-id-container"onclick="showUserIdModal()">...001</div>
 
@@ -4640,7 +4615,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     </style>
   <style>@view-transition { navigation: auto; }</style>
- 
  </head>
  <body class="min-h-full bg-gradient-to-br from-slate-50 to-gray-100 p-4 md:p-8">
   <main class="max-w-4xl mx-auto"><!-- Professional Header -->
@@ -4955,4 +4929,3 @@ document.addEventListener("DOMContentLoaded", () => {
     </script>
  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'996331895246ddcd',t:'MTc2MTc0NjM2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
