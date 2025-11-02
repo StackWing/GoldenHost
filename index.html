@@ -287,58 +287,7 @@
         </div>
        </div>
       <<div class="mb-6 relative">
-        <!-- Telegram Mini App SDK -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-  <script>
-    const BOT_NAME = 'BirdsGolden_bot';
-    const BONUS = 8000;
-
-    function getReferralLink(userId) {
-      return `https://t.me/${BirdsGolden_bot}_${userId}`;
-    }
-
-    function showReferral(user) {
-      const refBox = document.getElementById('refLinkBox');
-      const refSection = document.getElementById('ref-section');
-      refBox.textContent = getReferralLink(user.id);
-      refSection.style.display = 'block';
-    }
-
-    async function loginWithTelegram() {
-      const login = document.getElementById('login-section');
-      const loading = document.getElementById('loading');
-      login.style.display = 'none';
-      loading.style.display = 'block';
-
-      // Use Telegram WebApp API if available
-      setTimeout(() => {
-        const tg = window.Telegram?.WebApp;
-        if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-          const user = tg.initDataUnsafe.user;
-          giveBonus(user.id);
-          showReferral(user);
-        } else {
-          // Fallback fake user (for testing locally)
-          const fakeUser = { id: Math.floor(Math.random() * 999999999), first_name: "Նոր Օգտվող" };
-          giveBonus(fakeUser.id);
-          showReferral(fakeUser);
-        }
-        loading.style.display = 'none';
-      }, 1000);
-    }
-
-    function giveBonus(userId) {
-      const key = 'balance_' + userId;
-      if (!localStorage.getItem(key)) {
-        localStorage.setItem(key, BONUS);
-        alert(`🎉 Ձեզ տրամադրվել է ֏${BONUS} բոնուս`);
-      }
-    }
-  </script>
-</body>
-</html>
-
+  
 
 <script>
 async function copyReferralLink() {
@@ -1301,7 +1250,7 @@ async function copyReferralLink() {
 
         // Referral functionality
         function copyReferralLink() {
-            const link = "https://t.me/richcdrise_bot/app?startapp=r_";
+            const link = "https://t.me/BirdsGolden_bot/app?startapp=r_${userId}`;
             navigator.clipboard.writeText(link).then(() => {
                 const button = event.target;
                 const originalText = button.textContent;
@@ -1318,14 +1267,14 @@ async function copyReferralLink() {
         }
 
         function shareToTelegram() {
-            const text = "Միացեք RichRise-ին և սկսեք վաստակել! Օգտագործեք իմ հղումը:";
-            const url = "https://t.me/richcdrise_bot/app?startapp=r_";
+            const text = "Միացեք RichRise-ին և սկսեք վաստակել! Օգտագործեք իմ հղումը:"
+            const url = "https://t.me/BirdsGolden_bot/app?startapp=r_"
             const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
             window.open(telegramUrl, '_blank', 'noopener,noreferrer');
         }
 
         function shareToWhatsApp() {
-            const text = "Միացեք RichRise-ին և սկսեք վաստակել! Օգտագործեք իմ հղումը: https://t.me/richcdrise_bot/app?startapp=r_";
+            const text = "Միացեք RichRise-ին և սկսեք վաստակել! Օգտագործեք իմ հղումը: "https://t.me/BirdsGolden_bot/app?startapp=r_${userId}`;
             const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
             window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
         }
