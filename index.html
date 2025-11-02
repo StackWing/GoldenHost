@@ -286,13 +286,12 @@
          <p class="text-sm text-gray-600 leading-relaxed">RichLab-ը առաջարկում է ֏4,000 առատաձեռն բոնուս ձեր հղման միջոցով գրանցվող յուրաքանչյուր օգտատիրոջ համար, և դուք կստանաք հղման օգտատիրոջ եկամտի 10%-ը որպես միջնորդավճար։</p><button onclick="closeHelpGuide()" class="text-purple-600 text-sm font-medium mt-2 hover:text-purple-700">Փակել</button>
         </div>
        </div>
-      <<div class="mb-6 relative">
-  </div><!-- Referral Link -->
+      </div><!-- Referral Link -->
       <div class="mb-6">
        <h4 class="font-medium text-gray-800 mb-3">Ձեր հղման հղումը</h4>
        <div class="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg border"><input type="text" value="https://t.me/richcdrise_bot/app?startapp=r_" class="flex-1 bg-transparent text-sm text-gray-600 outline-none" readonly> <button onclick="copyReferralLink()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors"> Պատճենել </button>
        </div>
-</div><!-- Share Buttons -->
+      </div><!-- Share Buttons -->
       <div class="mb-6">
        <h4 class="font-medium text-gray-800 mb-3">Կիսվեք</h4>
        <div class="grid grid-cols-2 gap-3"><button onclick="shareToTelegram()" class="flex items-center justify-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg transition-colors"> <span>📱</span> <span class="text-sm font-medium">Telegram</span> </button> <button onclick="shareToWhatsApp()" class="flex items-center justify-center space-x-2 bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg transition-colors"> <span>💬</span> <span class="text-sm font-medium">WhatsApp</span> </button>
@@ -886,8 +885,11 @@
           <div class="w-32 h-32 bg-white rounded-lg mx-auto flex items-center justify-center border-2 border-dashed border-gray-300">
            <div class="text-center">
             <div class="text-4xl mb-2">
-            <img src="https://scontent.cdninstagram.com/v/t51.82787-15/572196968_18069898085352066_2502868784702310986_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=Mzc1NjQ3ODk4ODY4OTQxMTk2OQ%3D%3D.3-ccb1-7&ccb=1-7&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjMyMHgzMjAuc2RyLkMzIn0%3D&_nc_ohc=zCeGXCXMgzwQ7kNvwEE0w2p&_nc_oc=Adkz8t5IKSGOkigLThQ7iY_Vi2vIgcw19cjNDWGOv7LJLxIHLqK_Q1m4lux4tCUFqvo&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=igo3-xlSSwdIrpFPDV31ng&oh=00_AfeJYAPZUvIeLd3O8cmk-D9-LarZ4buYa171T1R2i_mp9A&oe=690C2825"            
-           </div>
+             📱
+            </div>
+            <div class="text-xs text-gray-500">
+             QR Code
+            </div>
            </div>
           </div>
          </div>
@@ -1140,7 +1142,12 @@
                 updateWithdrawalForm(method);
             }
         }
-        
+        function generateReferralLink() {
+            if (currentUser) {
+                const referralLink = `https://t.me/BirdsGolden_bot/app?startapp=r_${currentUser.id}`;
+                document.getElementById('referral-link').value = referralLink;
+        }
+
         function updateNavigation(activeSectionName) {
             document.querySelectorAll('.nav-item').forEach(nav => {
                 nav.classList.remove('active');
@@ -1223,15 +1230,38 @@
             });
         });
 
+        // Help guide functionality
+        function closeHelpGuide() {
+            document.getElementById('help-guide').style.display = 'none';
+        }
+
+        // Referral functionality
+        function copyReferralLink() {
+            const link = "https://t.me/richcdrise_bot/app?startapp=r_";
+            navigator.clipboard.writeText(link).then(() => {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = "Պատճենված!";
+                button.classList.add('bg-green-600');
+                button.classList.remove('bg-blue-600');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('bg-green-600');
+                    button.classList.add('bg-blue-600');
+                }, 2000);
+            });
+        }
+
         function shareToTelegram() {
             const text = "Միացեք RichRise-ին և սկսեք վաստակել! Օգտագործեք իմ հղումը:";
-            const url = "https://t.me/BirdsGolden_rtapp=r_";
+            const url = "https://t.me/richcdrise_bot/app?startapp=r_";
             const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
             window.open(telegramUrl, '_blank', 'noopener,noreferrer');
         }
 
         function shareToWhatsApp() {
-            const text = "Միացեք RichRise-ին և սկսեք վաստակել! Օգտագործեք իմ հղումը: https://t.me/BirdsGolden_artapp=r_";
+            const text = "Միացեք RichRise-ին և սկսեք վաստակել! Օգտագործեք իմ հղումը: https://t.me/richcdrise_bot/app?startapp=r_";
             const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
             window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
         }
@@ -1256,6 +1286,7 @@
                 }, 3000);
             }
         });
+
         // Withdrawal form functionality
         document.getElementById('withdrawal-form').addEventListener('submit', function(e) {
             e.preventDefault();
