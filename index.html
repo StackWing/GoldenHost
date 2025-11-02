@@ -4374,4 +4374,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
 })();
 </script>
+<script>
+  // ✅ Ստուգում ենք Telegram Mini App միջավայրը
+  const tg = window.Telegram?.WebApp;
+
+  if (tg && tg.initDataUnsafe?.user) {
+      const user = tg.initDataUnsafe.user;
+
+      // Օգտատիրոջ անուն և ID
+      const userName = user.first_name + (user.last_name ? " " + user.last_name : "");
+      const userId = user.id;
+
+      // Դնեմ էջի մեջ
+      document.getElementById('profile-name').textContent = userName;
+      document.getElementById('profile-id').textContent = "ID: " + userId;
+
+      console.log("✅ Telegram user detected:", userName, userId);
+  } else {
+      console.log("⚠️ Not running inside Telegram Mini App — demo mode");
+  }
+</script>
 </html>
