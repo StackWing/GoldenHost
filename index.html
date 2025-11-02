@@ -4394,4 +4394,36 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("⚠️ Not running inside Telegram Mini App — demo mode");
   }
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Ստանում ենք Telegram API օբյեկտը
+  const tg = window.Telegram.WebApp;
+
+  // Ստանում ենք օգտատիրոջ տվյալները
+  const user = tg.initDataUnsafe?.user;
+
+  // Գտնում ենք HTML էլեմենտները
+  const nameEl = document.getElementById("profile-name");
+  const idEl = document.getElementById("profile-id");
+
+  if (user) {
+    // Իրական տվյալներ
+    const fullName = `${user.first_name || ""} ${user.last_name || ""}`.trim();
+    const userId = user.id;
+
+    if (nameEl) nameEl.textContent = fullName || "Անանուն օգտատեր";
+    if (idEl) idEl.textContent = "ID: " + userId;
+
+    console.log("✅ User detected:", fullName, userId);
+  } else {
+    // Եթե չի կարդում Telegram-ից
+    if (nameEl) nameEl.textContent = "Դեմո օգտատեր";
+    if (idEl) idEl.textContent = "ID: —";
+    console.log("⚠️ User info not found (demo mode)");
+  }
+
+  // Telegram design activation
+  tg.ready();
+});
+</script>
 </html>
