@@ -4259,171 +4259,45 @@ setInterval(updateBlockchainData,30000);
             };
         }
 
-        // Add haptic feedback to all buttons
-        document.addEventListener('click', function(e) {
-            if (e.target.tagName === 'BUTTON' || e.target.closest('.card-hover') || e.target.closest('.deposit-method')) {
-                triggerHaptic('light');
-            }
-        });
-
-        // Close modals when clicking outside
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('popup-overlay')) {
-                if (e.target.id === 'deposit-modal') {
-                    closeDepositModal();
-                } else if (e.target.id === 'withdraw-modal') {
-                    closeWithdrawModal();
-                } else if (e.target.id === 'success-modal') {
-                    closeSuccessModal();
-                }
-            }
-        });
-    </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99357a6784e2fb7e',t:'MTc2MTI2NzAwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-<!-- Referral Bonus Script -->
-<script>
+   <script>
 document.addEventListener("DOMContentLoaded", () => {
-    function checkReferralBonus() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const startParam = urlParams.get("startapp");
-
-        if (startParam && startParam.startsWith("r_")) {
-            const referrerId = startParam.replace("r_", "");
-            const hasReceived = localStorage.getItem("referralBonusReceived");
-
-            if (!hasReceived) {
-                let currentBalance = parseInt(localStorage.getItem("balance") || "0");
-                currentBalance += 4000;
-
-                localStorage.setItem("balance", currentBalance);
-                localStorage.setItem("referralBonusReceived", "true");
-                localStorage.setItem("referrerId", referrerId);
-
-                alert("🎉 Դուք ստացաք 4000 դրամ՝ գրանցվելով referral հղումով!");
-            }
-        }
-    }
-    checkReferralBonus();
-});
-</script>
-
-<!-- Leave this script below -->
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99357a6784e2fb7e',t:'MTc2MTI2NzAwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-</body>
-!-- Leave this script below -->
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99357a6784e2fb7e',t:'MTc2MTI2NzAwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-</body>
-
-<script>
-(function() {
-    const tg = window.Telegram?.WebApp;
-    if (!tg) return;
-
-    const user = tg.initDataUnsafe?.user;
-    if (!user?.id) return;
-
-    const userId = user.id;
-    window.TG_USER_ID = userId;
-
-    // Փոխում է հենց այն span-ը, որտեղ onclick="showUserIdModal()"
-    document.querySelectorAll('[onclick="showUserIdModal()"]').forEach(el => {
-        el.innerText = userId;
-    });
-})();
-</script>
-
-<script>
-(function() {
-    const tg = window.Telegram?.WebApp;
-    if (!tg) return;
-
-    const user = tg.initDataUnsafe?.user;
-    if (!user) return;
-
-    const username = user.username || `user_${user.id}`;
-    const userId = user.id;
-    window.TG_USERNAME = username;
-    window.TG_USER_ID = userId;
-
-    // ---------- 1. h3 username ----------
-    document.querySelectorAll('h3[onclick="showProfileModal()"]').forEach(el => {
-        el.innerHTML = `<a href="https://t.me/${username}" target="_blank" class="text-blue-500 hover:underline">@${username}</a>`;
-    });
-
-    // ---------- 2. Avatar picture ----------
-    document.querySelectorAll('div[onclick="showProfileModal()"] > span').forEach(el => {
-        if(user.photo_url){
-            el.innerHTML = `<img src="${user.photo_url}" alt="${username}" class="w-16 h-16 rounded-full object-cover">`;
-        } else {
-            el.innerText = '👤';
-        }
-    });
-
-   
-    function replacePlaceholders() { // ---------- 3. Ընդհանուր “…001” փոփոխություն ----------
-        document.querySelectorAll('*').forEach(el => {
-            if(el.innerText.trim() === '...001'){
-                el.innerText = userId;
-            }
-        });
-    }
-
-    replacePlaceholders();
-    const observer = new MutationObserver(replacePlaceholders);
-    observer.observe(document.body, { childList: true, subtree: true });
-
-})();
-</script>
-<script>
-  // ✅ Ստուգում ենք Telegram Mini App միջավայրը
   const tg = window.Telegram?.WebApp;
-
-  if (tg && tg.initDataUnsafe?.user) {
-      const user = tg.initDataUnsafe.user;
-
-      // Օգտատիրոջ անուն և ID
-      const userName = user.first_name + (user.last_name ? " " + user.last_name : "");
-      const userId = user.id;
-
-      // Դնեմ էջի մեջ
-      document.getElementById('profile-name').textContent = userName;
-      document.getElementById('profile-id').textContent = "ID: " + userId;
-
-      console.log("✅ Telegram user detected:", userName, userId);
-  } else {
-      console.log("⚠️ Not running inside Telegram Mini App — demo mode");
+  if (!tg) {
+    console.log("⚠️ Not inside Telegram Mini App — demo mode");
+    return;
   }
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  // Ստանում ենք Telegram API օբյեկտը
-  const tg = window.Telegram.WebApp;
 
-  // Ստանում ենք օգտատիրոջ տվյալները
   const user = tg.initDataUnsafe?.user;
+  if (!user) {
+    console.log("⚠️ No Telegram user found");
+    return;
+  }
 
-  // Գտնում ենք HTML էլեմենտները
+  const fullName = `${user.first_name || ""} ${user.last_name || ""}`.trim() || "Անանուն օգտատեր";
+  const userId = user.id;
+
+  // Տեղադրում ենք էջի վրա
   const nameEl = document.getElementById("profile-name");
   const idEl = document.getElementById("profile-id");
+  if (nameEl) nameEl.textContent = fullName;
+  if (idEl) idEl.textContent = "ID: " + userId;
 
-  if (user) {
-    // Իրական տվյալներ
-    const fullName = `${user.first_name || ""} ${user.last_name || ""}`.trim();
-    const userId = user.id;
+  // Պահպանում ենք localStorage-ում
+  localStorage.setItem("userName", fullName);
+  localStorage.setItem("userId", userId);
 
-    if (nameEl) nameEl.textContent = fullName || "Անանուն օգտատեր";
-    if (idEl) idEl.textContent = "ID: " + userId;
+  // Ստուգում ենք՝ արդյոք արդեն ստացել է բոնուս
+  const bonusReceived = localStorage.getItem(`bonus_${userId}`);
+  if (!bonusReceived) {
+    const currentBalance = parseInt(localStorage.getItem("balance") || "0");
+    const newBalance = currentBalance + 8000;
+    localStorage.setItem("balance", newBalance);
+    localStorage.setItem(`bonus_${userId}`, "true");
 
-    console.log("✅ User detected:", fullName, userId);
-  } else {
-    // Եթե չի կարդում Telegram-ից
-    if (nameEl) nameEl.textContent = "Դեմո օգտատեր";
-    if (idEl) idEl.textContent = "ID: —";
-    console.log("⚠️ User info not found (demo mode)");
+    alert("🎉 Շնորհավորում ենք, դուք ստացաք 8000 դրամ bonus՝ որպես նոր օգտատեր!");
   }
 
-  // Telegram design activation
   tg.ready();
 });
 </script>
-</html>
+<html>
