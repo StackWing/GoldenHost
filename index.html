@@ -31,6 +31,10 @@
         
         .nav-item {
             transition: all 0.2s ease-in-out;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         
         .nav-item:hover {
@@ -39,6 +43,20 @@
         
         .nav-item.active {
             background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .nav-item:active {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(0.95);
+        }
+        
+        /* Mobile-specific improvements */
+        @media (max-width: 768px) {
+            .nav-item {
+                min-height: 44px;
+                min-width: 44px;
+            }
         }
         
         .support-form {
@@ -52,6 +70,64 @@
         
         .section.active {
             display: block;
+        }
+        
+        /* Warning animation styles */
+        .warning-animation {
+            animation: warningPulse 2s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .warning-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(251, 146, 60, 0.3), transparent);
+            animation: warningShine 3s ease-in-out infinite;
+        }
+        
+        .warning-icon {
+            animation: warningBounce 1.5s ease-in-out infinite;
+            display: inline-block;
+        }
+        
+        @keyframes warningPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(251, 146, 60, 0.4);
+                border-color: #fed7aa;
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(251, 146, 60, 0);
+                border-color: #fb923c;
+            }
+        }
+        
+        @keyframes warningShine {
+            0% {
+                left: -100%;
+            }
+            50% {
+                left: 100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+        
+        @keyframes warningBounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            40% {
+                transform: translateY(-3px) scale(1.1);
+            }
+            60% {
+                transform: translateY(-1px) scale(1.05);
+            }
         }
     </style>
   <style>@view-transition { navigation: auto; }</style>
@@ -74,7 +150,7 @@
        <div class="text-3xl font-bold text-gray-800 mb-4">
         ֏<span id="total-balance">8,000</span>
        </div>
-       <p id="add-money-text" class="text-gray-600 text-sm mb-4">Ավելացրեք գումար և սկսեք վաստակել</p><button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors"> Ավելացնել գումար </button>
+       <p id="add-money-text" class="text-gray-600 text-sm mb-4">Ավելացրեք գումար և սկսեք վաստակել</p><button onclick="showDepositModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors"> Ավելացնել գումար </button>
       </div>
      </div><!-- Earning Methods -->
      <div class="space-y-4">
@@ -207,7 +283,7 @@
         </div>
         <div>
          <h4 class="font-medium text-gray-800 mb-2">Օգնության ուղեցույց է պե՞տք։</h4>
-         <p class="text-sm text-gray-600 leading-relaxed">RichRise-ը առաջարկում է 4 000 Նաիրայի առատաձեռն բոնուս ձեր հղման միջոցով գրանցվող յուրաքանչյուր օգտատիրոջ համար, և դուք կստանաք հղման օգտատիրոջ եկամտի 10%-ը որպես միջնորդավճար։</p><button onclick="closeHelpGuide()" class="text-purple-600 text-sm font-medium mt-2 hover:text-purple-700">Փակել</button>
+         <p class="text-sm text-gray-600 leading-relaxed">RichLab-ը առաջարկում է ֏4,000 առատաձեռն բոնուս ձեր հղման միջոցով գրանցվող յուրաքանչյուր օգտատիրոջ համար, և դուք կստանաք հղման օգտատիրոջ եկամտի 10%-ը որպես միջնորդավճար։</p><button onclick="closeHelpGuide()" class="text-purple-600 text-sm font-medium mt-2 hover:text-purple-700">Փակել</button>
         </div>
        </div>
       </div><!-- Referral Link -->
@@ -280,31 +356,292 @@
        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-3xl">📺</span>
        </div>
        <h3 class="text-xl font-semibold text-gray-800 mb-2">Տեսանյութեր</h3>
-       <p class="text-gray-600">Դիտեք և վաստակեք</p>
-      </div>
-      <div class="space-y-4">
-       <div class="bg-gradient-to-r from-red-50 to-orange-50 rounded-lg p-4">
-        <div class="flex items-center justify-between mb-3">
-         <h4 class="font-medium text-gray-800">Մատչելի տեսանյութեր</h4><span class="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-medium">0 նոր</span>
-        </div>
-        <div class="text-center py-8">
-         <div class="text-gray-400 text-4xl mb-3">
-          🎬
-         </div>
-         <p class="text-gray-500 text-sm">Տեսանյութեր չկան</p>
-         <p class="text-gray-400 text-xs mt-1">Նոր տեսանյութեր շուտով կհասանելի լինեն</p>
+       <p class="text-gray-600">Տեսանյութերի կենտրոն</p>
+      </div><!-- Daily Limit Info -->
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+       <div class="flex items-start space-x-3"><span class="text-blue-500 text-lg">ℹ️</span>
+        <div class="text-sm text-blue-700">
+         <p class="font-medium mb-1">Օրական սահմանափակում</p>
+         <p>Հետևյալ գովազդվող տեսանյութերից յուրաքանչյուրը կարելի է դիտել, և երբ դուք դիտեք տեսանյութը, կստանաք համապատասխան միջնորդավճար: Օգտատերերի քանակի պատճառով յուրաքանչյուր անձ կարող է օրական դիտել ընդամենը 3 տեսանյութ:</p>
         </div>
        </div>
-       <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4">
-        <h4 class="font-medium text-gray-800 mb-2">💰 Վաստակած գումար</h4>
+      </div><!-- Daily Progress -->
+      <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4 mb-6">
+       <div class="flex items-center justify-between mb-2">
+        <h4 class="font-medium text-gray-800">Այսօրվա առաջընթաց</h4><span class="text-sm text-purple-600 font-medium">0/3 դիտված</span>
+       </div>
+       <div class="w-full bg-gray-200 rounded-full h-2">
+        <div id="daily-progress" class="bg-purple-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+       </div>
+      </div><!-- Available Videos -->
+      <div class="space-y-4">
+       <h4 class="font-medium text-gray-800">Մատչելի տեսանյութեր</h4><!-- Video 1 -->
+       <div class="video-card bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
+        <div class="flex items-center justify-between">
+         <div class="flex items-center space-x-4">
+          <div class="w-16 h-12 bg-red-500 rounded-lg flex items-center justify-center"><span class="text-white text-lg">▶️</span>
+          </div>
+          <div>
+           <h5 class="font-medium text-gray-800">Գովազդային տեսանյութ #1</h5>
+           <p class="text-sm text-gray-600">Տևողություն: 30 վայրկյան</p>
+           <div class="flex items-center space-x-2 mt-1"><span class="text-green-600 font-bold">Վաստակեք ֏2,300</span>
+           </div>
+          </div>
+         </div><button onclick="watchVideo(1)" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"> Դիտել </button>
+        </div>
+       </div><!-- Video 2 -->
+       <div class="video-card bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg p-4 border border-blue-200">
+        <div class="flex items-center justify-between">
+         <div class="flex items-center space-x-4">
+          <div class="w-16 h-12 bg-blue-500 rounded-lg flex items-center justify-center"><span class="text-white text-lg">▶️</span>
+          </div>
+          <div>
+           <h5 class="font-medium text-gray-800">Գովազդային տեսանյութ #2</h5>
+           <p class="text-sm text-gray-600">Տևողություն: 45 վայրկյան</p>
+           <div class="flex items-center space-x-2 mt-1"><span class="text-green-600 font-bold">Վաստակեք ֏2,300</span>
+           </div>
+          </div>
+         </div><button onclick="watchVideo(2)" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"> Դիտել </button>
+        </div>
+       </div><!-- Video 3 -->
+       <div class="video-card bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-4 border border-purple-200">
+        <div class="flex items-center justify-between">
+         <div class="flex items-center space-x-4">
+          <div class="w-16 h-12 bg-purple-500 rounded-lg flex items-center justify-center"><span class="text-white text-lg">▶️</span>
+          </div>
+          <div>
+           <h5 class="font-medium text-gray-800">Գովազդային տեսանյութ #3</h5>
+           <p class="text-sm text-gray-600">Տևողություն: 60 վայրկյան</p>
+           <div class="flex items-center space-x-2 mt-1"><span class="text-green-600 font-bold">Վաստակեք ֏2,300</span>
+           </div>
+          </div>
+         </div><button onclick="watchVideo(3)" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"> Դիտել </button>
+        </div>
+       </div><!-- Earnings Summary -->
+       <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg p-4 border border-yellow-200 mt-6">
+        <h4 class="font-medium text-gray-800 mb-2">💰 Այսօրվա վաստակ</h4>
         <div class="text-center">
-         <div class="text-2xl font-bold text-green-600">
+         <div id="daily-earnings" class="text-2xl font-bold text-orange-600">
           ֏0
          </div>
          <div class="text-sm text-gray-600">
           Տեսանյութերից վաստակած
          </div>
         </div>
+       </div>
+      </div>
+     </div><!-- Video Player Modal -->
+     <div id="video-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+      <div class="bg-white rounded-xl p-6 max-w-sm mx-4 w-full">
+       <div class="text-center mb-4">
+        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-4xl">📺</span>
+        </div>
+        <h3 id="video-title" class="text-lg font-semibold text-gray-800 mb-2">Գովազդային տեսանյութ</h3>
+        <p class="text-gray-600 text-sm">Դիտեք ամբողջ տեսանյութը վաստակելու համար</p>
+       </div><!-- Fake Video Player -->
+       <div class="bg-black rounded-lg mb-4 relative overflow-hidden">
+        <div class="aspect-video flex items-center justify-center">
+         <div id="video-content" class="text-white text-center">
+          <div class="text-6xl mb-2">
+           ▶️
+          </div>
+          <p class="text-sm">Սեղմեք նվագարկելու համար</p>
+         </div>
+        </div><!-- Progress Bar -->
+        <div class="absolute bottom-0 left-0 right-0 bg-gray-800 bg-opacity-75 p-2">
+         <div class="w-full bg-gray-600 rounded-full h-1">
+          <div id="video-progress" class="bg-red-500 h-1 rounded-full transition-all duration-1000" style="width: 0%"></div>
+         </div>
+         <div class="flex justify-between text-white text-xs mt-1"><span id="current-time">0:00</span> <span id="total-time">0:30</span>
+         </div>
+        </div>
+       </div>
+       <div class="flex space-x-3"><button onclick="closeVideoModal()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 rounded-lg font-medium transition-colors"> Փակել </button> <button id="play-button" onclick="playVideo()" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-medium transition-colors"> Նվագարկել </button>
+       </div>
+      </div>
+     </div>
+    </div><!-- Tasks Section -->
+    <div id="tasks-section" class="section space-y-6">
+     <div class="bg-white rounded-xl p-6 card-shadow">
+      <div class="text-center mb-6">
+       <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-3xl">📱</span>
+       </div>
+       <h3 class="text-xl font-semibold text-gray-800 mb-2">Task Center</h3>
+       <p class="text-gray-600">Kumpleto: 0</p>
+       <div class="text-2xl font-bold text-green-600 mt-2">
+        ֏8,000
+       </div>
+      </div><!-- Tips Section -->
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+       <div class="flex items-start space-x-3"><span class="text-blue-500 text-lg">💡</span>
+        <div class="text-sm text-blue-700">
+         <p class="font-medium mb-1">Tips</p>
+         <p>Ang Offer Area ay kung saan makakakita ka ng iba't ibang app at survey offer na maaari mong gawin upang kumita ng pera.</p>
+        </div>
+       </div>
+      </div><!-- Available Tasks -->
+      <div class="space-y-4">
+       <h4 class="font-medium text-gray-800">Mga Available na Tasks</h4><!-- Task 1 -->
+       <div class="task-card bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
+        <div class="flex items-center justify-between">
+         <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center"><span class="text-white text-lg">🎮</span>
+          </div>
+          <div>
+           <h5 class="font-medium text-gray-800">Lumahok sa mga aktibidad</h5>
+           <p class="text-sm text-gray-600">Gumamit ng hindi bababa sa 5 minuto</p>
+           <div class="flex items-center space-x-2 mt-1"><span class="text-green-600 font-bold">Makakatanggap ka ng ֏2,000</span>
+           </div>
+          </div>
+         </div><button onclick="startTask(1)" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"> Pumunta </button>
+        </div>
+       </div><!-- Task 2 -->
+       <div class="task-card bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg p-4 border border-blue-200">
+        <div class="flex items-center justify-between">
+         <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center"><span class="text-white text-lg">📱</span>
+          </div>
+          <div>
+           <h5 class="font-medium text-gray-800">Lumahok sa mga aktibidad</h5>
+           <p class="text-sm text-gray-600">Gumamit ng hindi bababa sa 5 minuto</p>
+           <div class="flex items-center space-x-2 mt-1"><span class="text-green-600 font-bold">Makakatanggap ka ng ֏2,000</span>
+           </div>
+          </div>
+         </div><button onclick="startTask(2)" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"> Pumunta </button>
+        </div>
+       </div><!-- Task 3 -->
+       <div class="task-card bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-4 border border-purple-200">
+        <div class="flex items-center justify-between">
+         <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center"><span class="text-white text-lg">🎯</span>
+          </div>
+          <div>
+           <h5 class="font-medium text-gray-800">Lumahok sa mga aktibidad</h5>
+           <p class="text-sm text-gray-600">Maglaro ng hindi bababa sa 5 minuto</p>
+           <div class="flex items-center space-x-2 mt-1"><span class="text-green-600 font-bold">Makakatanggap ka ng ֏2,000</span>
+           </div>
+          </div>
+         </div><button onclick="startTask(3)" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"> Pumunta </button>
+        </div>
+       </div><!-- Task 4 -->
+       <div class="task-card bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-4 border border-orange-200">
+        <div class="flex items-center justify-between">
+         <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center"><span class="text-white text-lg">📊</span>
+          </div>
+          <div>
+           <h5 class="font-medium text-gray-800">Lumahok sa mga aktibidad</h5>
+           <p class="text-sm text-gray-600">Gumamit ng hindi bababa sa 5 minuto</p>
+           <div class="flex items-center space-x-2 mt-1"><span class="text-green-600 font-bold">Makakatanggap ka ng ֏2,000</span>
+           </div>
+          </div>
+         </div><button onclick="startTask(4)" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"> Pumunta </button>
+        </div>
+       </div><!-- Task 5 -->
+       <div class="task-card bg-gradient-to-r from-pink-50 to-rose-50 rounded-lg p-4 border border-pink-200">
+        <div class="flex items-center justify-between">
+         <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-pink-500 rounded-lg flex items-center justify-center"><span class="text-white text-lg">🎲</span>
+          </div>
+          <div>
+           <h5 class="font-medium text-gray-800">Karanasan ang application</h5>
+           <p class="text-sm text-gray-600">Maglaro ng hindi bababa sa 5 minuto</p>
+           <div class="flex items-center space-x-2 mt-1"><span class="text-green-600 font-bold">Makakatanggap ka ng ֏2,000</span>
+           </div>
+          </div>
+         </div><button onclick="startTask(5)" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"> Pumunta </button>
+        </div>
+       </div><!-- Task 6 -->
+       <div class="task-card bg-gradient-to-r from-teal-50 to-cyan-50 rounded-lg p-4 border border-teal-200">
+        <div class="flex items-center justify-between">
+         <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center"><span class="text-white text-lg">🎮</span>
+          </div>
+          <div>
+           <h5 class="font-medium text-gray-800">Subukan ang bagong laro</h5>
+           <p class="text-sm text-gray-600">Maglaro ng hindi bababa sa 5 minuto</p>
+           <div class="flex items-center space-x-2 mt-1"><span class="text-green-600 font-bold">Makakatanggap ka ng ֏2,000</span>
+           </div>
+          </div>
+         </div><button onclick="startTask(6)" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"> Pumunta </button>
+        </div>
+       </div><!-- More Tasks -->
+       <div class="task-card bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-4 border border-indigo-200">
+        <div class="flex items-center justify-between">
+         <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-indigo-500 rounded-lg flex items-center justify-center"><span class="text-white text-lg">📱</span>
+          </div>
+          <div>
+           <h5 class="font-medium text-gray-800">Lumahok sa mga aktibidad</h5>
+           <p class="text-sm text-gray-600">Gumamit ng hindi bababa sa 5 minuto</p>
+           <div class="flex items-center space-x-2 mt-1"><span class="text-green-600 font-bold">Makakatanggap ka ng ֏2,000</span>
+           </div>
+          </div>
+         </div><button onclick="startTask(7)" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"> Pumunta </button>
+        </div>
+       </div>
+       <div class="task-card bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg p-4 border border-yellow-200">
+        <div class="flex items-center justify-between">
+         <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center"><span class="text-white text-lg">⭐</span>
+          </div>
+          <div>
+           <h5 class="font-medium text-gray-800">Lumahok sa mga aktibidad</h5>
+           <p class="text-sm text-gray-600">Gumamit ng hindi bababa sa 5 minuto</p>
+           <div class="flex items-center space-x-2 mt-1"><span class="text-green-600 font-bold">Makakatanggap ka ng ֏2,000</span>
+           </div>
+          </div>
+         </div><button onclick="startTask(8)" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"> Pumunta </button>
+        </div>
+       </div>
+       <div class="task-card bg-gradient-to-r from-red-50 to-pink-50 rounded-lg p-4 border border-red-200">
+        <div class="flex items-center justify-between">
+         <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center"><span class="text-white text-lg">🚀</span>
+          </div>
+          <div>
+           <h5 class="font-medium text-gray-800">Lumahok sa mga aktibidad</h5>
+           <p class="text-sm text-gray-600">Gumamit ng hindi bababa sa 5 minuto</p>
+           <div class="flex items-center space-x-2 mt-1"><span class="text-green-600 font-bold">Makakatanggap ka ng ֏2,000</span>
+           </div>
+          </div>
+         </div><button onclick="startTask(9)" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"> Pumunta </button>
+        </div>
+       </div>
+       <div class="task-card bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg p-4 border border-gray-200">
+        <div class="flex items-center justify-between">
+         <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-gray-500 rounded-lg flex items-center justify-center"><span class="text-white text-lg">💼</span>
+          </div>
+          <div>
+           <h5 class="font-medium text-gray-800">Lumahok sa mga aktibidad</h5>
+           <p class="text-sm text-gray-600">Gumamit ng hindi bababa sa 5 minuto</p>
+           <div class="flex items-center space-x-2 mt-1"><span class="text-green-600 font-bold">Makakatanggap ka ng ֏2,000</span>
+           </div>
+          </div>
+         </div><button onclick="startTask(10)" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"> Pumunta </button>
+        </div>
+       </div>
+      </div>
+     </div><!-- Task Completion Modal -->
+     <div id="task-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+      <div class="bg-white rounded-xl p-6 max-w-sm mx-4 w-full">
+       <div class="text-center mb-4">
+        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-4xl">📱</span>
+        </div>
+        <h3 id="task-title" class="text-lg font-semibold text-gray-800 mb-2">Task Simulation</h3>
+        <p class="text-gray-600 text-sm">Simulasyon ng task completion</p>
+       </div><!-- Task Progress -->
+       <div class="bg-gray-100 rounded-lg p-4 mb-4">
+        <div class="flex items-center justify-between mb-2"><span class="text-sm text-gray-600">Progress:</span> <span id="task-progress-text" class="text-sm font-medium text-blue-600">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+         <div id="task-progress-bar" class="bg-blue-500 h-2 rounded-full transition-all duration-1000" style="width: 0%"></div>
+        </div>
+        <div class="text-center mt-2"><span id="task-timer" class="text-sm text-gray-500">5:00</span>
+        </div>
+       </div>
+       <div class="flex space-x-3"><button onclick="closeTaskModal()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 rounded-lg font-medium transition-colors"> Cancel </button> <button id="start-task-button" onclick="startTaskTimer()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition-colors"> Start Task </button>
        </div>
       </div>
      </div>
@@ -315,27 +652,30 @@
        <h3 class="text-lg font-semibold text-gray-800">Ելքագրել գումար</h3><button class="text-gray-400 hover:text-gray-600">✕</button>
       </div><!-- Available Balance -->
       <div class="text-center mb-4">
-       <h4 class="text-sm text-gray-600 mb-1">Հասանելի մնացորդ</h4>
-       <div class="text-2xl font-bold text-green-600">
-        ֏8,000
+       <h4 class="text-sm text-gray-600 mb-1">Մնացորդ</h4>
+       <div class="text-2xl font-bold text-orange-600">
+        8000/80000
        </div>
+       <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+        <div class="bg-orange-500 h-2 rounded-full" style="width: 10%"></div>
+       </div>
+       <p class="text-sm text-gray-600 mt-2">Կարևոր է, որ ձեր եկամտի մեջ լինի առնվազն 80 000 մնացորդ։</p>
       </div>
       <h4 class="font-medium text-gray-800 mb-3">Ընտրեք ելքագրման եղանակը</h4><!-- Warning -->
-      <div class="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-4">
-       <div class="flex items-start space-x-2"><span class="text-orange-500 text-sm">⚠️</span>
+      <div class="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-4 warning-animation">
+       <div class="flex items-start space-x-2"><span class="text-orange-500 text-sm warning-icon">⚠️</span>
         <div class="text-sm text-orange-700">
          Դեպոզիտ չարած օգտատերերը չեն կարող կատարել withdrawal ձեր պրոֆիլը ակտիվ չի
         </div>
        </div>
       </div>
      </div><!-- Payment Methods -->
-     <div class="space-y-3"><!-- DASH PRO -->
-      <div class="bg-white rounded-xl p-4 card-shadow">
+     <div class="space-y-3"><!-- DASH PRO --> <button class="payment-method w-full bg-white rounded-xl p-4 card-shadow hover:bg-gray-50 transition-colors" data-method="dashpro">
        <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
          <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center"><span class="text-white text-sm font-bold">✓</span>
          </div>
-         <div>
+         <div class="text-left">
           <div class="font-semibold text-gray-800">
            DASH PRO
           </div>
@@ -353,14 +693,12 @@
           0% Հարկ
          </div>
         </div>
-       </div>
-      </div><!-- EasyPay -->
-      <div class="bg-white rounded-xl p-3 card-shadow">
+       </div></button> <!-- EasyPay --> <button class="payment-method w-full bg-white rounded-xl p-3 card-shadow hover:bg-gray-50 transition-colors" data-method="easypay">
        <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
          <div class="w-6 h-6 bg-orange-500 rounded flex items-center justify-center"><span class="text-white text-xs">E</span>
          </div>
-         <div>
+         <div class="text-left">
           <div class="font-medium text-gray-800">
            EasyPay
           </div>
@@ -369,14 +707,12 @@
           </div>
          </div>
         </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
-       </div>
-      </div><!-- Idram -->
-      <div class="bg-white rounded-xl p-3 card-shadow">
+       </div></button> <!-- Idram --> <button class="payment-method w-full bg-white rounded-xl p-3 card-shadow hover:bg-gray-50 transition-colors" data-method="idram">
        <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
          <div class="w-6 h-6 bg-red-500 rounded flex items-center justify-center"><span class="text-white text-xs">I</span>
          </div>
-         <div>
+         <div class="text-left">
           <div class="font-medium text-gray-800">
            Idram
           </div>
@@ -385,14 +721,12 @@
           </div>
          </div>
         </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
-       </div>
-      </div><!-- ArCa -->
-      <div class="bg-white rounded-xl p-3 card-shadow">
+       </div></button> <!-- ArCa --> <button class="payment-method w-full bg-white rounded-xl p-3 card-shadow hover:bg-gray-50 transition-colors" data-method="arca">
        <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
          <div class="w-6 h-6 bg-blue-500 rounded flex items-center justify-center"><span class="text-white text-xs">A</span>
          </div>
-         <div>
+         <div class="text-left">
           <div class="font-medium text-gray-800">
            ArCa
           </div>
@@ -401,14 +735,12 @@
           </div>
          </div>
         </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
-       </div>
-      </div><!-- Banks -->
-      <div class="bg-white rounded-xl p-3 card-shadow">
+       </div></button> <!-- Banks --> <button class="payment-method w-full bg-white rounded-xl p-3 card-shadow hover:bg-gray-50 transition-colors" data-method="ameriabank">
        <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
          <div class="w-6 h-6 bg-green-600 rounded flex items-center justify-center"><span class="text-white text-xs">🏦</span>
          </div>
-         <div>
+         <div class="text-left">
           <div class="font-medium text-gray-800">
            ԱմերիաԲանկ
           </div>
@@ -417,14 +749,12 @@
           </div>
          </div>
         </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
-       </div>
-      </div>
-      <div class="bg-white rounded-xl p-3 card-shadow">
+       </div></button> <button class="payment-method w-full bg-white rounded-xl p-3 card-shadow hover:bg-gray-50 transition-colors" data-method="ardshinbank">
        <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
          <div class="w-6 h-6 bg-purple-600 rounded flex items-center justify-center"><span class="text-white text-xs">🏦</span>
          </div>
-         <div>
+         <div class="text-left">
           <div class="font-medium text-gray-800">
            ԱրդշինԲանկ
           </div>
@@ -433,14 +763,12 @@
           </div>
          </div>
         </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
-       </div>
-      </div>
-      <div class="bg-white rounded-xl p-3 card-shadow">
+       </div></button> <button class="payment-method w-full bg-white rounded-xl p-3 card-shadow hover:bg-gray-50 transition-colors" data-method="acba">
        <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
          <div class="w-6 h-6 bg-red-600 rounded flex items-center justify-center"><span class="text-white text-xs">🏦</span>
          </div>
-         <div>
+         <div class="text-left">
           <div class="font-medium text-gray-800">
            ԱԿԲԱ Բանկ
           </div>
@@ -449,14 +777,12 @@
           </div>
          </div>
         </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
-       </div>
-      </div>
-      <div class="bg-white rounded-xl p-3 card-shadow">
+       </div></button> <button class="payment-method w-full bg-white rounded-xl p-3 card-shadow hover:bg-gray-50 transition-colors" data-method="converse">
        <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
          <div class="w-6 h-6 bg-blue-700 rounded flex items-center justify-center"><span class="text-white text-xs">🏦</span>
          </div>
-         <div>
+         <div class="text-left">
           <div class="font-medium text-gray-800">
            Կոնվերս Բանկ
           </div>
@@ -465,14 +791,12 @@
           </div>
          </div>
         </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
-       </div>
-      </div><!-- Crypto -->
-      <div class="bg-white rounded-xl p-3 card-shadow">
+       </div></button> <!-- Crypto --> <button class="payment-method w-full bg-white rounded-xl p-3 card-shadow hover:bg-gray-50 transition-colors" data-method="bitcoin">
        <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
          <div class="w-6 h-6 bg-orange-500 rounded flex items-center justify-center"><span class="text-white text-xs">₿</span>
          </div>
-         <div>
+         <div class="text-left">
           <div class="font-medium text-gray-800">
            Bitcoin (BTC)
           </div>
@@ -481,14 +805,12 @@
           </div>
          </div>
         </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
-       </div>
-      </div><!-- USDT Selected -->
-      <div class="bg-green-50 border-2 border-green-500 rounded-xl p-3 card-shadow">
+       </div></button> <!-- USDT Selected --> <button class="payment-method selected w-full bg-green-50 border-2 border-green-500 rounded-xl p-3 card-shadow hover:bg-green-100 transition-colors" data-method="usdt">
        <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
          <div class="w-6 h-6 bg-green-600 rounded flex items-center justify-center"><span class="text-white text-xs">₮</span>
          </div>
-         <div>
+         <div class="text-left">
           <div class="font-medium text-gray-800">
            USDT (TRC20)
           </div>
@@ -496,15 +818,18 @@
            Կրիպտո ելքագրում
           </div>
          </div>
-        </div><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
-       </div>
-      </div>
+        </div>
+        <div class="flex items-center space-x-2"><span class="text-sm text-green-600 font-medium">Ակտիվ</span>
+         <div class="w-4 h-4 bg-green-600 rounded-full flex items-center justify-center"><span class="text-white text-xs">✓</span>
+         </div>
+        </div>
+       </div></button>
      </div><!-- Withdrawal Form -->
      <div class="bg-white rounded-xl p-4 card-shadow">
       <form id="withdrawal-form" class="space-y-4">
        <div><label for="amount" class="block text-sm font-medium text-gray-700 mb-1">Գումարը (֏)</label> <input type="number" id="amount" name="amount" placeholder="Մուտքագրեք գումարը" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
         <div class="text-xs text-gray-500 mt-1">
-         Նվազագույնը ֏125,000
+         Նվազագույնը ֏80,000
         </div>
        </div>
        <div><label for="wallet-address" class="block text-sm font-medium text-gray-700 mb-1">USDT TRC20 հասցե</label> <input type="text" id="wallet-address" name="wallet-address" placeholder="Մուտքագրեք Ձեր USDT TRC20 wallet հասցեն:" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
@@ -524,11 +849,179 @@
        </div>
       </div>
      </div>
+    </div><!-- Deposit Modal -->
+    <div id="deposit-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+     <div class="bg-white rounded-xl max-w-sm mx-4 w-full max-h-[90vh] overflow-y-auto"><!-- Header -->
+      <div class="flex items-center justify-between p-4 border-b">
+       <h3 class="text-lg font-semibold text-gray-800">Ավելացնել գումար</h3><button onclick="closeDepositModal()" class="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+      </div><!-- Content -->
+      <div class="p-4 space-y-6"><!-- Crypto Deposit Section -->
+       <div>
+        <h4 class="font-medium text-gray-800 mb-3">Կրիպտո Ավանդ</h4>
+        <p class="text-sm text-gray-600 mb-4">Ընտրեք ձեր նախընտրած արժույթը</p><!-- Currency Selection -->
+        <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Ավելացնել այստեղ</label> <select id="crypto-currency" onchange="updateCryptoDetails()" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"> <option value="dash">DASH</option> <option value="bitcoin">Bitcoin (BTC)</option> <option value="ethereum">Ethereum (ETH)</option> <option value="usdt">USDT (TRC20)</option> </select>
+        </div><!-- Network Selection -->
+        <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Ընտրեք մետաղադրամի ցանցը</label>
+         <div id="network-info" class="bg-gray-50 p-3 rounded-lg border">
+          <div class="font-medium text-gray-800">
+           DASH Network
+          </div>
+         </div>
+        </div><!-- Bonus Info -->
+        <div id="bonus-info" class="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-3 mb-4">
+         <div class="flex items-start space-x-2"><span class="text-yellow-600 text-lg">🎁</span>
+          <div class="text-sm">
+           <div class="font-medium text-gray-800 mb-1">
+            Բոնուս
+           </div>
+           <div class="text-gray-600">
+            Ստացեք լրացուցիչ 300% բոնուս <span id="min-deposit">0.3967683 DASH</span> նվազագույն ավանդի դեպքում
+           </div>
+          </div>
+         </div>
+        </div><!-- QR Code Section -->
+        <div class="text-center mb-4">
+         <div class="bg-gray-100 rounded-lg p-4 mb-3">
+          <div class="w-32 h-32 bg-white rounded-lg mx-auto flex items-center justify-center border-2 border-dashed border-gray-300">
+           <div class="text-center">
+            <div class="text-4xl mb-2">
+             📱
+            </div>
+            <div class="text-xs text-gray-500">
+             QR Code
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="text-sm font-medium text-gray-800 mb-1">
+          DASH Wallet QR Code
+         </div>
+         <div class="text-xs text-gray-600">
+          Սկանավորեք QR կոդը ձեր դրամապանակով
+         </div>
+        </div><!-- Wallet Address -->
+        <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Լիցքավորման հասցե</label>
+         <div class="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg border"><input type="text" id="deposit-address" value="XdW2GWqqzrRAw21MA6voyhRxy8bF7fQVP6" class="flex-1 bg-transparent text-sm text-gray-800 font-mono outline-none" readonly> <button onclick="copyDepositAddress()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition-colors"> 📋 Պատճենել </button>
+         </div>
+        </div><!-- Warning -->
+        <div class="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-4">
+         <div class="flex items-start space-x-2"><span class="text-orange-500 text-sm">⚠️</span>
+          <div class="text-sm text-orange-700">
+           <div id="warning-text">
+            Հասցեին ուղարկեք միայն DASH: 0.15 DASH-ից ցածր փոխանցումները չեն հաշվարկվի։
+           </div>
+          </div>
+         </div>
+        </div><!-- Instructions -->
+        <div class="mb-6">
+         <h5 class="font-medium text-gray-800 mb-3">Ինչպես լիցքավորել կրիպտոարժույթ?</h5>
+         <div class="space-y-3">
+          <div class="flex items-start space-x-3">
+           <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
+            1
+           </div>
+           <div class="text-sm text-gray-700">
+            Պատճենեք վերևի հասցեն
+           </div>
+          </div>
+          <div class="flex items-start space-x-3">
+           <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
+            2
+           </div>
+           <div class="text-sm text-gray-700">
+            Բացեք ձեր <span id="wallet-name">DASH</span> դրամապանակը
+           </div>
+          </div>
+          <div class="flex items-start space-x-3">
+           <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
+            3
+           </div>
+           <div class="text-sm text-gray-700">
+            Ուղարկեք նվազագույնը <span id="min-amount">0.15 DASH</span>
+           </div>
+          </div>
+          <div class="flex items-start space-x-3">
+           <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
+            4
+           </div>
+           <div class="text-sm text-gray-700">
+            Սպասեք հաստատմանը
+           </div>
+          </div>
+         </div>
+        </div><!-- Status -->
+        <div class="text-center mb-6">
+         <div class="text-sm text-gray-600 mb-2">
+          Սպասում ենք գործարքին...
+         </div>
+         <div class="flex items-center justify-center space-x-2">
+          <div class="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
+          <div class="w-2 h-2 bg-blue-600 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+          <div class="w-2 h-2 bg-blue-600 rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
+         </div>
+        </div><!-- Blockchain Info -->
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
+         <div class="flex items-center space-x-2 mb-3"><span class="text-blue-600 text-lg">⛓️</span>
+          <div class="font-medium text-gray-800">
+           Blockchain Verification
+          </div>
+         </div>
+         <div class="grid grid-cols-2 gap-3 text-xs">
+          <div>
+           <div class="text-gray-600">
+            Network:
+           </div>
+           <div id="network-name" class="font-medium text-gray-800">
+            DASH Mainnet
+           </div>
+          </div>
+          <div>
+           <div class="text-gray-600">
+            Block Height:
+           </div>
+           <div id="block-height" class="font-medium text-gray-800">
+            1,847,995
+           </div>
+          </div>
+          <div>
+           <div class="text-gray-600">
+            Network Hash Rate:
+           </div>
+           <div id="hash-rate" class="font-medium text-gray-800">
+            2.84 PH/s
+           </div>
+          </div>
+          <div>
+           <div class="text-gray-600">
+            Confirmations Required:
+           </div>
+           <div id="confirmations" class="font-medium text-gray-800">
+            6 blocks
+           </div>
+          </div>
+          <div>
+           <div class="text-gray-600">
+            Average Block Time:
+           </div>
+           <div id="block-time" class="font-medium text-gray-800">
+            2.5 minutes
+           </div>
+          </div>
+         </div>
+         <div class="flex items-center space-x-2 mt-3 pt-3 border-t border-blue-200"><span class="text-green-600 text-sm">✅</span>
+          <div class="text-xs text-gray-700">
+           Real-time blockchain data verification active
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
     </div>
    </main><!-- Bottom Navigation -->
    <nav class="gradient-bg text-white p-4 mt-8">
     <div class="max-w-md mx-auto">
-     <div class="flex justify-around"><button class="nav-item active flex flex-col items-center space-y-1 px-3 py-2 rounded-lg" data-section="home"> <span class="text-lg">🏠</span> <span class="text-xs">Գլխավոր</span> </button> <button class="nav-item flex flex-col items-center space-y-1 px-3 py-2 rounded-lg" data-section="referral"> <span class="text-lg">👥</span> <span class="text-xs">Հրավեր</span> </button> <button class="nav-item flex flex-col items-center space-y-1 px-3 py-2 rounded-lg" data-section="center"> <span class="text-lg">🎯</span> <span class="text-xs">Կենտրոն</span> </button> <button class="nav-item flex flex-col items-center space-y-1 px-3 py-2 rounded-lg" data-section="video"> <span class="text-lg">📺</span> <span class="text-xs">Տեսանյութ</span> </button> <button class="nav-item flex flex-col items-center space-y-1 px-3 py-2 rounded-lg" data-section="cashout"> <span class="text-lg">💰</span> <span class="text-xs">Կանխիկ</span> </button>
+     <div class="flex justify-around"><button class="nav-item active flex flex-col items-center space-y-1 px-3 py-2 rounded-lg" data-section="home"> <span class="text-lg">🏠</span> <span class="text-xs">Գլխավոր</span> </button> <button class="nav-item flex flex-col items-center space-y-1 px-3 py-2 rounded-lg" data-section="referral"> <span class="text-lg">👥</span> <span class="text-xs">Հրավեր</span> </button> <button class="nav-item flex flex-col items-center space-y-1 px-3 py-2 rounded-lg" data-section="tasks"> <span class="text-lg">📱</span> <span class="text-xs">Tasks</span> </button> <button class="nav-item flex flex-col items-center space-y-1 px-3 py-2 rounded-lg" data-section="video"> <span class="text-lg">📺</span> <span class="text-xs">Տեսանյութ</span> </button> <button class="nav-item flex flex-col items-center space-y-1 px-3 py-2 rounded-lg" data-section="cashout"> <span class="text-lg">💰</span> <span class="text-xs">Կանխիկ</span> </button>
      </div>
     </div>
    </nav>
@@ -572,8 +1065,31 @@
             ]);
         }
 
-        // Stable navigation system
+        // Enhanced stable navigation system
+        let currentSection = 'home';
+        let selectedPaymentMethod = 'usdt';
+        
+        // Video watching system
+        let videosWatchedToday = 0;
+        let dailyEarnings = 0;
+        let currentVideoId = null;
+        let videoTimer = null;
+        let videoProgress = 0;
+        const maxDailyVideos = 3;
+        const videoReward = 2300;
+        
+        // Task system
+        let tasksCompleted = 0;
+        let currentTaskId = null;
+        let taskTimer = null;
+        let taskProgress = 0;
+        const taskReward = 2000;
+        const taskDuration = 300; // 5 minutes in seconds
+        
         function showSection(sectionName) {
+            // Prevent unnecessary updates
+            if (currentSection === sectionName) return;
+            
             // Hide all sections
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
@@ -583,19 +1099,129 @@
             const targetSection = document.getElementById(sectionName + '-section');
             if (targetSection) {
                 targetSection.classList.add('active');
+                currentSection = sectionName;
+            }
+            
+            // Update navigation active state
+            updateNavigation(sectionName);
+        }
+
+        // Payment method selection
+        function selectPaymentMethod(method) {
+            // Remove selection from all methods
+            document.querySelectorAll('.payment-method').forEach(btn => {
+                btn.classList.remove('selected', 'bg-green-50', 'border-2', 'border-green-500');
+                btn.classList.add('bg-white');
+                
+                // Remove checkmark
+                const checkmark = btn.querySelector('.w-4.h-4.bg-green-600');
+                if (checkmark) {
+                    checkmark.remove();
+                }
+            });
+            
+            // Select the clicked method
+            const selectedBtn = document.querySelector(`[data-method="${method}"]`);
+            if (selectedBtn) {
+                selectedBtn.classList.add('selected', 'bg-green-50', 'border-2', 'border-green-500');
+                selectedBtn.classList.remove('bg-white');
+                
+                // Add checkmark
+                const statusContainer = selectedBtn.querySelector('.flex.items-center.space-x-2') || 
+                                      selectedBtn.querySelector('.text-right') ||
+                                      selectedBtn.querySelector('.text-sm.text-green-600').parentElement;
+                
+                if (statusContainer && !statusContainer.querySelector('.w-4.h-4.bg-green-600')) {
+                    const checkmark = document.createElement('div');
+                    checkmark.className = 'w-4 h-4 bg-green-600 rounded-full flex items-center justify-center';
+                    checkmark.innerHTML = '<span class="text-white text-xs">✓</span>';
+                    statusContainer.appendChild(checkmark);
+                }
+                
+                selectedPaymentMethod = method;
+                updateWithdrawalForm(method);
+            }
+        }
+        
+        function updateNavigation(activeSectionName) {
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.classList.remove('active');
+                if (nav.getAttribute('data-section') === activeSectionName) {
+                    nav.classList.add('active');
+                }
+            });
+        }
+
+        // Update withdrawal form based on selected payment method
+        function updateWithdrawalForm(method) {
+            const form = document.getElementById('withdrawal-form');
+            const walletContainer = form.querySelector('[for="wallet-address"]').parentElement;
+            const walletLabel = form.querySelector('[for="wallet-address"]');
+            const walletInput = form.querySelector('#wallet-address');
+            const walletDisplay = form.querySelector('.bg-gray-50.p-3.rounded-lg.border');
+            
+            // Update form fields based on payment method
+            switch(method) {
+                case 'usdt':
+                    walletLabel.textContent = 'USDT TRC20 հասցե';
+                    walletInput.placeholder = 'Մուտքագրեք Ձեր USDT TRC20 wallet հասցեն:';
+                    walletDisplay.style.display = 'block';
+                    break;
+                case 'bitcoin':
+                    walletLabel.textContent = 'Bitcoin հասցե';
+                    walletInput.placeholder = 'Մուտքագրեք Ձեր Bitcoin wallet հասցեն:';
+                    walletDisplay.style.display = 'none';
+                    break;
+                case 'idram':
+                    walletLabel.textContent = 'Idram հաշվի համար';
+                    walletInput.placeholder = 'Մուտքագրեք Ձեր Idram հաշվի համարը:';
+                    walletDisplay.style.display = 'none';
+                    break;
+                case 'easypay':
+                    walletLabel.textContent = 'EasyPay հեռախոսահամար';
+                    walletInput.placeholder = 'Մուտքագրեք Ձեր հեռախոսահամարը:';
+                    walletDisplay.style.display = 'none';
+                    break;
+                case 'arca':
+                    walletLabel.textContent = 'ArCa քարտի համար';
+                    walletInput.placeholder = 'Մուտքագրեք Ձեր քարտի համարը:';
+                    walletDisplay.style.display = 'none';
+                    break;
+                default:
+                    // For banks and other methods
+                    walletLabel.textContent = 'Բանկային հաշվի տվյալներ';
+                    walletInput.placeholder = 'Մուտքագրեք Ձեր բանկային հաշվի տվյալները:';
+                    walletDisplay.style.display = 'none';
+                    break;
             }
         }
 
-        // Navigation event listeners
+        // Navigation event listeners with improved touch handling
         document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                // Update active state
-                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-                this.classList.add('active');
+            // Handle both click and touchend events for better mobile support
+            const handleNavigation = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
                 
-                // Show the corresponding section
                 const sectionName = this.getAttribute('data-section');
                 showSection(sectionName);
+            };
+            
+            item.addEventListener('click', handleNavigation);
+            item.addEventListener('touchend', handleNavigation);
+            
+            // Prevent double-tap zoom on mobile
+            item.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+            });
+        });
+
+        // Payment method event listeners
+        document.querySelectorAll('.payment-method').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const method = this.getAttribute('data-method');
+                selectPaymentMethod(method);
             });
         });
 
@@ -666,7 +1292,7 @@
             
             if (amount && walletAddress) {
                 // Validate minimum amount
-                if (parseFloat(amount) < 125000) {
+                if (parseFloat(amount) < 80000) {
                     // Show error message inline
                     const amountField = document.getElementById('amount');
                     amountField.style.borderColor = '#ef4444';
@@ -690,6 +1316,438 @@
             }
         });
 
+        // Video watching functions
+        function watchVideo(videoId) {
+            if (videosWatchedToday >= maxDailyVideos) {
+                showVideoLimitMessage();
+                return;
+            }
+            
+            currentVideoId = videoId;
+            document.getElementById('video-title').textContent = `Գովազդային տեսանյութ #${videoId}`;
+            
+            // Set video duration based on video ID
+            const durations = { 1: 30, 2: 45, 3: 60 };
+            const duration = durations[videoId] || 30;
+            document.getElementById('total-time').textContent = formatTime(duration);
+            
+            // Reset video state
+            videoProgress = 0;
+            document.getElementById('video-progress').style.width = '0%';
+            document.getElementById('current-time').textContent = '0:00';
+            document.getElementById('video-content').innerHTML = `
+                <div class="text-6xl mb-2">▶️</div>
+                <p class="text-sm">Սեղմեք նվագարկելու համար</p>
+            `;
+            document.getElementById('play-button').textContent = 'Նվագարկել';
+            document.getElementById('play-button').onclick = playVideo;
+            
+            // Show modal
+            document.getElementById('video-modal').classList.remove('hidden');
+        }
+        
+        function playVideo() {
+            const durations = { 1: 30, 2: 45, 3: 60 };
+            const totalDuration = durations[currentVideoId] || 30;
+            
+            // Update video content to show playing state
+            document.getElementById('video-content').innerHTML = `
+                <div class="text-6xl mb-2 animate-pulse">📺</div>
+                <p class="text-sm">Տեսանյութը նվագարկվում է...</p>
+            `;
+            
+            // Update play button
+            document.getElementById('play-button').textContent = 'Նվագարկվում է...';
+            document.getElementById('play-button').disabled = true;
+            document.getElementById('play-button').classList.add('opacity-50');
+            
+            // Start video timer
+            videoProgress = 0;
+            videoTimer = setInterval(() => {
+                videoProgress += 1;
+                const progressPercent = (videoProgress / totalDuration) * 100;
+                
+                // Update progress bar
+                document.getElementById('video-progress').style.width = `${progressPercent}%`;
+                document.getElementById('current-time').textContent = formatTime(videoProgress);
+                
+                // Check if video is complete
+                if (videoProgress >= totalDuration) {
+                    completeVideo();
+                }
+            }, 1000);
+        }
+        
+        function completeVideo() {
+            clearInterval(videoTimer);
+            
+            // Update video content to show completion
+            document.getElementById('video-content').innerHTML = `
+                <div class="text-6xl mb-2">✅</div>
+                <p class="text-sm">Տեսանյութը ավարտված է!</p>
+                <p class="text-xs text-green-400 mt-2">+֏${videoReward.toLocaleString()}</p>
+            `;
+            
+            // Update earnings
+            videosWatchedToday++;
+            dailyEarnings += videoReward;
+            
+            // Update UI
+            updateVideoProgress();
+            updateDailyEarnings();
+            
+            // Update play button to close
+            document.getElementById('play-button').textContent = 'Փակել';
+            document.getElementById('play-button').disabled = false;
+            document.getElementById('play-button').classList.remove('opacity-50');
+            document.getElementById('play-button').onclick = closeVideoModal;
+            
+            // Disable the video card if limit reached
+            if (videosWatchedToday >= maxDailyVideos) {
+                disableAllVideoCards();
+            } else {
+                disableVideoCard(currentVideoId);
+            }
+        }
+        
+        function closeVideoModal() {
+            document.getElementById('video-modal').classList.add('hidden');
+            clearInterval(videoTimer);
+            currentVideoId = null;
+            videoProgress = 0;
+        }
+        
+        function updateVideoProgress() {
+            const progressPercent = (videosWatchedToday / maxDailyVideos) * 100;
+            document.getElementById('daily-progress').style.width = `${progressPercent}%`;
+            
+            // Update progress text
+            const progressText = document.querySelector('.text-purple-600.font-medium');
+            progressText.textContent = `${videosWatchedToday}/${maxDailyVideos} դիտված`;
+        }
+        
+        function updateDailyEarnings() {
+            document.getElementById('daily-earnings').textContent = `֏${dailyEarnings.toLocaleString()}`;
+        }
+        
+        function disableVideoCard(videoId) {
+            const videoCards = document.querySelectorAll('.video-card');
+            const targetCard = videoCards[videoId - 1];
+            
+            if (targetCard) {
+                const button = targetCard.querySelector('button');
+                button.textContent = 'Դիտված ✓';
+                button.disabled = true;
+                button.classList.remove('bg-green-600', 'hover:bg-green-700', 'bg-blue-600', 'hover:bg-blue-700', 'bg-purple-600', 'hover:bg-purple-700');
+                button.classList.add('bg-gray-400', 'cursor-not-allowed');
+                button.onclick = null;
+                
+                // Add completed styling to card
+                targetCard.classList.add('opacity-75');
+                targetCard.querySelector('.text-green-600.font-bold').classList.add('line-through');
+            }
+        }
+        
+        function disableAllVideoCards() {
+            const videoCards = document.querySelectorAll('.video-card');
+            videoCards.forEach((card, index) => {
+                if (index < videosWatchedToday) return; // Skip already watched videos
+                
+                const button = card.querySelector('button');
+                button.textContent = 'Օրական սահմանը լրացած';
+                button.disabled = true;
+                button.classList.remove('bg-green-600', 'hover:bg-green-700', 'bg-blue-600', 'hover:bg-blue-700', 'bg-purple-600', 'hover:bg-purple-700');
+                button.classList.add('bg-gray-400', 'cursor-not-allowed');
+                button.onclick = null;
+                
+                card.classList.add('opacity-50');
+            });
+        }
+        
+        function showVideoLimitMessage() {
+            // Create temporary message
+            const message = document.createElement('div');
+            message.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg z-50 text-sm';
+            message.textContent = 'Դուք արդեն դիտել եք օրական 3 տեսանյութ։ Վաղը կարող եք նորից դիտել։';
+            document.body.appendChild(message);
+            
+            setTimeout(() => {
+                message.remove();
+            }, 3000);
+        }
+        
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Task functions
+        function startTask(taskId) {
+            currentTaskId = taskId;
+            document.getElementById('task-title').textContent = `Task #${taskId} Simulation`;
+            
+            // Reset task state
+            taskProgress = 0;
+            document.getElementById('task-progress-bar').style.width = '0%';
+            document.getElementById('task-progress-text').textContent = '0%';
+            document.getElementById('task-timer').textContent = '5:00';
+            document.getElementById('start-task-button').textContent = 'Start Task';
+            document.getElementById('start-task-button').onclick = startTaskTimer;
+            
+            // Show modal
+            document.getElementById('task-modal').classList.remove('hidden');
+        }
+        
+        function startTaskTimer() {
+            // Update button
+            document.getElementById('start-task-button').textContent = 'Task Running...';
+            document.getElementById('start-task-button').disabled = true;
+            document.getElementById('start-task-button').classList.add('opacity-50');
+            
+            // Start task timer
+            taskProgress = 0;
+            taskTimer = setInterval(() => {
+                taskProgress += 1;
+                const progressPercent = (taskProgress / taskDuration) * 100;
+                const remainingTime = taskDuration - taskProgress;
+                
+                // Update progress bar
+                document.getElementById('task-progress-bar').style.width = `${progressPercent}%`;
+                document.getElementById('task-progress-text').textContent = `${Math.round(progressPercent)}%`;
+                document.getElementById('task-timer').textContent = formatTime(remainingTime);
+                
+                // Check if task is complete
+                if (taskProgress >= taskDuration) {
+                    completeTask();
+                }
+            }, 1000);
+        }
+        
+        function completeTask() {
+            clearInterval(taskTimer);
+            
+            // Update task completion
+            tasksCompleted++;
+            
+            // Update progress display
+            document.getElementById('task-progress-bar').style.width = '100%';
+            document.getElementById('task-progress-text').textContent = '100%';
+            document.getElementById('task-timer').textContent = 'Completed!';
+            
+            // Update button to close
+            document.getElementById('start-task-button').textContent = 'Task Completed! Close';
+            document.getElementById('start-task-button').disabled = false;
+            document.getElementById('start-task-button').classList.remove('opacity-50');
+            document.getElementById('start-task-button').onclick = closeTaskModal;
+            
+            // Disable the task card
+            disableTaskCard(currentTaskId);
+            
+            // Update task center stats
+            updateTaskStats();
+            
+            // Show completion message
+            setTimeout(() => {
+                showTaskCompletionMessage();
+            }, 1000);
+        }
+        
+        function closeTaskModal() {
+            document.getElementById('task-modal').classList.add('hidden');
+            clearInterval(taskTimer);
+            currentTaskId = null;
+            taskProgress = 0;
+        }
+        
+        function disableTaskCard(taskId) {
+            const taskCards = document.querySelectorAll('.task-card');
+            const targetCard = taskCards[taskId - 1];
+            
+            if (targetCard) {
+                const button = targetCard.querySelector('button');
+                button.textContent = 'Completed ✓';
+                button.disabled = true;
+                button.classList.remove('bg-green-600', 'hover:bg-green-700', 'bg-blue-600', 'hover:bg-blue-700', 'bg-purple-600', 'hover:bg-purple-700', 'bg-orange-600', 'hover:bg-orange-700', 'bg-pink-600', 'hover:bg-pink-700', 'bg-teal-600', 'hover:bg-teal-700', 'bg-indigo-600', 'hover:bg-indigo-700', 'bg-yellow-600', 'hover:bg-yellow-700', 'bg-red-600', 'hover:bg-red-700', 'bg-gray-600', 'hover:bg-gray-700');
+                button.classList.add('bg-gray-400', 'cursor-not-allowed');
+                button.onclick = null;
+                
+                // Add completed styling to card
+                targetCard.classList.add('opacity-75');
+                const rewardText = targetCard.querySelector('.text-green-600.font-bold');
+                if (rewardText) {
+                    rewardText.classList.add('line-through');
+                }
+            }
+        }
+        
+        function updateTaskStats() {
+            // Update task center completion count
+            const taskSection = document.getElementById('tasks-section');
+            if (taskSection) {
+                const completionText = taskSection.querySelector('p.text-gray-600');
+                if (completionText) {
+                    completionText.textContent = `Kumpleto: ${tasksCompleted}`;
+                }
+            }
+        }
+        
+        function showTaskCompletionMessage() {
+            // Create temporary message
+            const message = document.createElement('div');
+            message.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg z-50 text-sm';
+            message.textContent = `Task completed! You earned ֏${taskReward.toLocaleString()}`;
+            document.body.appendChild(message);
+            
+            setTimeout(() => {
+                message.remove();
+            }, 3000);
+        }
+
+        // Deposit modal functions
+        function showDepositModal() {
+            document.getElementById('deposit-modal').classList.remove('hidden');
+            // Start blockchain data animation
+            startBlockchainAnimation();
+        }
+        
+        function closeDepositModal() {
+            document.getElementById('deposit-modal').classList.add('hidden');
+            // Stop blockchain data animation
+            stopBlockchainAnimation();
+        }
+        
+        function updateCryptoDetails() {
+            const currency = document.getElementById('crypto-currency').value;
+            const cryptoData = {
+                dash: {
+                    network: 'DASH Network',
+                    address: 'XdW2GWqqzrRAw21MA6voyhRxy8bF7fQVP6',
+                    minDeposit: '0.3967683 DASH',
+                    minAmount: '0.15 DASH',
+                    walletName: 'DASH',
+                    warning: 'Հասցեին ուղարկեք միայն DASH: 0.15 DASH-ից ցածր փոխանցումները չեն հաշվարկվի։',
+                    qrTitle: 'DASH Wallet QR Code',
+                    networkName: 'DASH Mainnet',
+                    blockHeight: '1,847,995',
+                    hashRate: '2.84 PH/s',
+                    confirmations: '6 blocks',
+                    blockTime: '2.5 minutes'
+                },
+                bitcoin: {
+                    network: 'Bitcoin Network',
+                    address: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
+                    minDeposit: '0.001 BTC',
+                    minAmount: '0.0005 BTC',
+                    walletName: 'Bitcoin',
+                    warning: 'Հասցեին ուղարկեք միայն Bitcoin: 0.0005 BTC-ից ցածր փոխանցումները չեն հաշվարկվի։',
+                    qrTitle: 'Bitcoin Wallet QR Code',
+                    networkName: 'Bitcoin Mainnet',
+                    blockHeight: '825,432',
+                    hashRate: '450 EH/s',
+                    confirmations: '3 blocks',
+                    blockTime: '10 minutes'
+                },
+                ethereum: {
+                    network: 'Ethereum Network',
+                    address: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
+                    minDeposit: '0.05 ETH',
+                    minAmount: '0.01 ETH',
+                    walletName: 'Ethereum',
+                    warning: 'Հասցեին ուղարկեք միայն Ethereum: 0.01 ETH-ից ցածր փոխանցումները չեն հաշվարկվի։',
+                    qrTitle: 'Ethereum Wallet QR Code',
+                    networkName: 'Ethereum Mainnet',
+                    blockHeight: '18,945,123',
+                    hashRate: '850 TH/s',
+                    confirmations: '12 blocks',
+                    blockTime: '12 seconds'
+                },
+                usdt: {
+                    network: 'TRON Network (TRC20)',
+                    address: 'TQn9Y2khEsLMWD7fhRRHMbnqmS9aGHMeyn',
+                    minDeposit: '50 USDT',
+                    minAmount: '10 USDT',
+                    walletName: 'USDT TRC20',
+                    warning: 'Հասցեին ուղարկեք միայն USDT TRC20: 10 USDT-ից ցածր փոխանցումները չեն հաշվարկվի։',
+                    qrTitle: 'USDT TRC20 Wallet QR Code',
+                    networkName: 'TRON Mainnet',
+                    blockHeight: '56,789,123',
+                    hashRate: 'N/A',
+                    confirmations: '20 blocks',
+                    blockTime: '3 seconds'
+                }
+            };
+            
+            const data = cryptoData[currency];
+            if (data) {
+                document.getElementById('network-info').innerHTML = `<div class="font-medium text-gray-800">${data.network}</div>`;
+                document.getElementById('deposit-address').value = data.address;
+                document.getElementById('min-deposit').textContent = data.minDeposit;
+                document.getElementById('min-amount').textContent = data.minAmount;
+                document.getElementById('wallet-name').textContent = data.walletName;
+                document.getElementById('warning-text').textContent = data.warning;
+                document.querySelector('.text-sm.font-medium.text-gray-800.mb-1').textContent = data.qrTitle;
+                
+                // Update blockchain info
+                document.getElementById('network-name').textContent = data.networkName;
+                document.getElementById('block-height').textContent = data.blockHeight;
+                document.getElementById('hash-rate').textContent = data.hashRate;
+                document.getElementById('confirmations').textContent = data.confirmations;
+                document.getElementById('block-time').textContent = data.blockTime;
+            }
+        }
+        
+        function copyDepositAddress() {
+            const address = document.getElementById('deposit-address').value;
+            navigator.clipboard.writeText(address).then(() => {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = "📋 Պատճենված!";
+                button.classList.add('bg-green-600');
+                button.classList.remove('bg-blue-600');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('bg-green-600');
+                    button.classList.add('bg-blue-600');
+                }, 2000);
+            });
+        }
+        
+        let blockchainInterval;
+        
+        function startBlockchainAnimation() {
+            blockchainInterval = setInterval(() => {
+                // Animate block height
+                const blockHeightEl = document.getElementById('block-height');
+                const currentHeight = parseInt(blockHeightEl.textContent.replace(/,/g, ''));
+                const newHeight = currentHeight + Math.floor(Math.random() * 3) + 1;
+                blockHeightEl.textContent = newHeight.toLocaleString();
+                
+                // Animate hash rate slightly
+                const hashRateEl = document.getElementById('hash-rate');
+                const currency = document.getElementById('crypto-currency').value;
+                if (currency === 'dash') {
+                    const baseRate = 2.84;
+                    const variation = (Math.random() - 0.5) * 0.2;
+                    const newRate = (baseRate + variation).toFixed(2);
+                    hashRateEl.textContent = `${newRate} PH/s`;
+                } else if (currency === 'bitcoin') {
+                    const baseRate = 450;
+                    const variation = (Math.random() - 0.5) * 20;
+                    const newRate = Math.round(baseRate + variation);
+                    hashRateEl.textContent = `${newRate} EH/s`;
+                }
+            }, 5000);
+        }
+        
+        function stopBlockchainAnimation() {
+            if (blockchainInterval) {
+                clearInterval(blockchainInterval);
+                blockchainInterval = null;
+            }
+        }
+
         // Initialize Element SDK
         if (window.elementSdk) {
             window.elementSdk.init({
@@ -700,5 +1758,5 @@
             });
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'997f3e03a56f6e9c',t:'MTc2MjA0MDQ3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'997f5f9593fd6e9c',t:'MTc2MjA0MTg1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
