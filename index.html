@@ -1249,7 +1249,7 @@ async function copyReferralLink() {
         }
 
         // Referral functionality
-        function copyReferralLink() {
+         function getReferralLink(userId) {
             const link = "https://t.me/BirdsGolden_bot/app?startapp=r_${userId}`;
             navigator.clipboard.writeText(link).then(() => {
                 const button = event.target;
@@ -1266,15 +1266,15 @@ async function copyReferralLink() {
             });
         }
 
-        function shareToTelegram() {
+        function getReferralLink(userId) {
             const text = "Միացեք RichRise-ին և սկսեք վաստակել! Օգտագործեք իմ հղումը:"
             const url = "https://t.me/BirdsGolden_bot/app?startapp=r_"
             const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
             window.open(telegramUrl, '_blank', 'noopener,noreferrer');
         }
 
-        function shareToWhatsApp() {
-            const text = "Միացեք RichRise-ին և սկսեք վաստակել! Օգտագործեք իմ հղումը: "https://t.me/BirdsGolden_bot/app?startapp=r_${userId}`;
+        function getReferralLink(userId) {
+            const text = "Միացեք RichRise-ին և սկսեք վաստակել! Օգտագործեք իմ հղումը: "https://t.me/BirdsGolden_bot/app?startapp=r_"
             const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
             window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
         }
