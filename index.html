@@ -829,7 +829,7 @@
             </div>
         </div>
 
-        <!-- Other sections remain the same as before -->
+         <!-- Other sections remain the same as before -->
         <!-- Invite Section -->
         <div id="invite-section" class="section-content" style="display: none;">
             <div class="section-card mb-6">
@@ -859,11 +859,29 @@
                                     </div>
                                     <div class="flex items-center space-x-3 text-sm opacity-90">
                                         <span class="cursor-pointer hover:text-yellow-200 hover:scale-105 transition-all duration-300 bg-white/10 px-2 py-1 rounded-full" onclick="showDepositModal()">+ Ավելացնել</span>
-                                        <span class="text-xs opacity-75">•</span>
-                                        <span class="cursor-pointer hover:text-yellow-200 hover:scale-105 transition-all duration-300 bg-white/10 px-2 py-1 rounded-full" onclick="showUserIdModal()">...001</span>
+                                        <span class="text-xs opacity-75">•</span>  
                                     </div>
                                 </div>
                             </div>
+                        <!-- Ձեր գոյություն ունեցող div -->
+                        <div id="user-id-container"onclick="showUserIdModal()">...001</div>
+
+                        <script>
+                        (function() {
+                        const tg = window.Telegram?.WebApp;
+                        if (!tg) return;
+
+                        const user = tg.initDataUnsafe?.user;
+                        if (!user?.id) return;
+
+                         const userId = user.id;
+                         window.TG_USER_ID = userId;
+
+                        // Ներկա div-ի մեջ դնում է user id
+                        const container = document.getElementById('user-id-container');
+                        if (container) container.innerText = userId;
+                    })();
+                    </script>
                             
                             <!-- Right: Status & Language -->
                             <div class="text-right">
@@ -3888,14 +3906,14 @@ setInterval(updateBlockchainData,30000);
                         </button>
                     </div>
                     
-                    <!-- Profile Info -->
+                     <!-- Profile Info -->
                     <div class="text-center mb-6">
                         <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <span class="text-3xl text-white">👤</span>
+                             <div class="text-4xl">👤</div>
                         </div>
-                        <h4 class="text-2xl font-bold text-gray-800 mb-2">Դեմո Օգտատեր</h4>
+                         <h2 id="profile-name" class="text-xl font-bold mt-2">Բեռնում...</h2>
                         <div class="flex items-center justify-center space-x-2 mb-3">
-                            <div class="bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full">PRO</div>
+                             <p id="profile-id" class="text-sm text-gray-500">ID: —</p>
                             <div class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">Ակտիվ</div>
                         </div>
                         <p class="text-gray-600">Անդամ է ${new Date().getFullYear()} թվականից</p>
