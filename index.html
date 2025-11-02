@@ -1141,11 +1141,7 @@
                 selectedPaymentMethod = method;
                 updateWithdrawalForm(method);
             }
-        }
-        function generateReferralLink() {
-            if (currentUser) {
-                const referralLink = `https://t.me/BirdsGolden_bot/app?startapp=r_${currentUser.id}`;
-                document.getElementById('referral-link').value = referralLink;
+        
         }
 
         function updateNavigation(activeSectionName) {
@@ -1237,7 +1233,7 @@
 
         // Referral functionality
         function copyReferralLink() {
-            const link = "https://t.me/richcdrise_bot/app?startapp=r_";
+            const link = https://t.me/BirdsGolden_bot_/app?startapp=r_";
             navigator.clipboard.writeText(link).then(() => {
                 const button = event.target;
                 const originalText = button.textContent;
