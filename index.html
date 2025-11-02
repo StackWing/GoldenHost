@@ -863,33 +863,57 @@
                                     </div>
                                 </div>
                             </div>
-                        <!-- Ձեր գոյություն ունեցող div -->
-                        <div id="user-id-container"onclick="showUserIdModal()">...001</div>
+ <!-- 👇 Ահա այստեղ script-ը -->
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+      const tg = window.Telegram?.WebApp;
+      const nameEl = document.getElementById("profile-name");
+      const idEl = document.getElementById("profile-id");
+      const balanceEl = document.getElementById("balance");
+      const refLinkEl = document.getElementById("referral-link");
 
-                        <script>
-                        (function() {
-                        const tg = window.Telegram?.WebApp;
-                        if (!tg) return;
+      let balance = parseInt(localStorage.getItem("balance") || "0");
 
-                        const user = tg.initDataUnsafe?.user;
-                        if (!user?.id) return;
+      if (tg && tg.initDataUnsafe?.user) {
+          const user = tg.initDataUnsafe.user;
+          const fullName = `${user.first_name || ""} ${user.last_name || ""}`.trim();
+          const userId = user.id;
 
-                         const userId = user.id;
-                         window.TG_USER_ID = userId;
+          nameEl.textContent = fullName || "Անանուն օգտատեր";
+          idEl.textContent = "ID: " + userId;
+          balanceEl.textContent = "֏" + balance.toLocaleString("hy-AM");
+          refLinkEl.value = `https://t.me/BirdsGolden_bot?startapp=r_${userId}`;
 
-                        // Ներկա div-ի մեջ դնում է user id
-                        const container = document.getElementById('user-id-container');
-                        if (container) container.innerText = userId;
-                    })();
-                    </script>
-                            
-                            <!-- Right: Status & Language -->
-                            <div class="text-right">
-                                <div class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full mb-2 cursor-pointer hover:bg-green-400 hover:scale-105 transition-all duration-300" onclick="showStatusModal()">
-                                    <div class="flex items-center space-x-1">
-                                        <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
-                                        <span>Նոր օգտատեր</span>
-                                    </div>
+          const urlParams = new URLSearchParams(window.location.search);
+          const refParam = urlParams.get("startapp");
+          if (refParam && refParam.startsWith("r_") && !localStorage.getItem("referralBonus")) {
+              localStorage.setItem("referralBonus", "true");
+              balance += 8000;
+              localStorage.setItem("balance", balance);
+              balanceEl.textContent = "֏" + balance.toLocaleString("hy-AM");
+              alert("🎉 Դուք ստացաք 8000 դրամ բոնուս՝ referral հղումով!");
+          }
+      } else {
+          nameEl.textContent = "Դեմո օգտատեր";
+          idEl.textContent = "ID: —";
+          refLinkEl.value = "Demo Mode";
+      }
+
+      window.claimBonus = function() {
+          if (localStorage.getItem("claimedBonus")) {
+              alert("Դուք արդեն ստացել եք ձեր բոնուսը 🎁");
+              return;
+          }
+          balance += 8000;
+          localStorage.setItem("balance", balance);
+          localStorage.setItem("claimedBonus", "true");
+          balanceEl.textContent = "֏" + balance.toLocaleString("hy-AM");
+          alert("🎉 Դուք ստացաք 8000 դրամ բոնուս!");
+      };
+  });
+  </script>
+            <div></div><div>
+                            <div>
                                 </div>
                                 <div class="text-xs opacity-75 cursor-pointer hover:text-yellow-200 hover:scale-105 transition-all duration-300 bg-white/10 px-2 py-1 rounded-full" onclick="showLanguageModal()">
                                     🌐 Լեզու
@@ -4300,4 +4324,26 @@ document.addEventListener("DOMContentLoaded", () => {
   tg.ready();
 });
 </script>
-<html>
+<div id="profile">
+  <h2 id="profile-name">Բեռնում...</h2>
+  <p id="profile-id">ID: —</p>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const tg = window.Telegram?.WebApp;
+  if (!tg || !tg.initDataUnsafe?.user) {
+    document.getElementById("profile-name").textContent = "Դեմո օգտատեր";
+    document.getElementById("profile-id").textContent = "ID: —";
+    console.log("⚠️ Not running inside Telegram Mini App");
+    return;
+  }
+
+  const user = tg.initDataUnsafe.user;
+  const name = `${user.first_name || ""} ${user.last_name || ""}`.trim() || "Անանուն";
+  document.getElementById("profile-name").textContent = name;
+  document.getElementById("profile-id").textContent = "ID: " + user.id;
+  console.log("✅ Telegram user:", user);
+});
+</script>
+
