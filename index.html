@@ -1658,6 +1658,47 @@ function updateBlockchainData(){
 setTimeout(()=>{document.getElementById('status-message').classList.remove('hidden');},3000);
 setInterval(updateBlockchainData,30000);
 </script>
+
+<!-- Referral Bonus Script -->
+<script>
+(function () {
+  function getStartAppParam() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('startapp') || null;
+  }
+  function getBalance() {
+    return parseInt(localStorage.getItem('rl_balance') || '0', 10);
+  }
+  function setBalance(amount) {
+    localStorage.setItem('rl_balance', String(amount));
+    updateBalanceUI();
+  }
+  function updateBalanceUI() {
+    const balEls = document.querySelectorAll('[data-rl-balance]');
+    const val = getBalance();
+    balEls.forEach(el => el.innerText = `֏${val.toLocaleString()}`);
+  }
+  function handleReferralBonus() {
+    const startapp = getStartAppParam();
+    if (!startapp || !startapp.startsWith('r_')) return;
+    const referrerId = startapp.slice(2);
+    const bonusKey = `rl_ref_bonus_received_${startapp}`;
+    if (localStorage.getItem(bonusKey) === '1') return;
+    const bonus = 4000;
+    const prev = getBalance();
+    setBalance(prev + bonus);
+    localStorage.setItem(bonusKey, '1');
+    localStorage.setItem('rl_referrer', referrerId);
+    alert(`🎉 Դուք ստացաք ${bonus.toLocaleString()} դրամ՝ գրանցվելով referral հղումով!`);
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    handleReferralBonus();
+    if (!localStorage.getItem('rl_balance')) localStorage.setItem('rl_balance', '0');
+    updateBalanceUI();
+  });
+})();
+</script>
+
 </body>
 </html>
              
@@ -4294,7 +4335,48 @@ setInterval(updateBlockchainData,30000);
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99357a6784e2fb7e',t:'MTc2MTI2NzAwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99357a6784e2fb7e',t:'MTc2MTI2NzAwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<!-- Referral Bonus Script -->
+<script>
+(function () {
+  function getStartAppParam() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('startapp') || null;
+  }
+  function getBalance() {
+    return parseInt(localStorage.getItem('rl_balance') || '0', 10);
+  }
+  function setBalance(amount) {
+    localStorage.setItem('rl_balance', String(amount));
+    updateBalanceUI();
+  }
+  function updateBalanceUI() {
+    const balEls = document.querySelectorAll('[data-rl-balance]');
+    const val = getBalance();
+    balEls.forEach(el => el.innerText = `֏${val.toLocaleString()}`);
+  }
+  function handleReferralBonus() {
+    const startapp = getStartAppParam();
+    if (!startapp || !startapp.startsWith('r_')) return;
+    const referrerId = startapp.slice(2);
+    const bonusKey = `rl_ref_bonus_received_${startapp}`;
+    if (localStorage.getItem(bonusKey) === '1') return;
+    const bonus = 4000;
+    const prev = getBalance();
+    setBalance(prev + bonus);
+    localStorage.setItem(bonusKey, '1');
+    localStorage.setItem('rl_referrer', referrerId);
+    alert(`🎉 Դուք ստացաք ${bonus.toLocaleString()} դրամ՝ գրանցվելով referral հղումով!`);
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    handleReferralBonus();
+    if (!localStorage.getItem('rl_balance')) localStorage.setItem('rl_balance', '0');
+    updateBalanceUI();
+  });
+})();
+</script>
+
+</body>
 <!-- Referral Bonus Script -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
@@ -4324,6 +4406,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- Leave this script below -->
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99357a6784e2fb7e',t:'MTc2MTI2NzAwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+
+<!-- Referral Bonus Script -->
+<script>
+(function () {
+  function getStartAppParam() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('startapp') || null;
+  }
+  function getBalance() {
+    return parseInt(localStorage.getItem('rl_balance') || '0', 10);
+  }
+  function setBalance(amount) {
+    localStorage.setItem('rl_balance', String(amount));
+    updateBalanceUI();
+  }
+  function updateBalanceUI() {
+    const balEls = document.querySelectorAll('[data-rl-balance]');
+    const val = getBalance();
+    balEls.forEach(el => el.innerText = `֏${val.toLocaleString()}`);
+  }
+  function handleReferralBonus() {
+    const startapp = getStartAppParam();
+    if (!startapp || !startapp.startsWith('r_')) return;
+    const referrerId = startapp.slice(2);
+    const bonusKey = `rl_ref_bonus_received_${startapp}`;
+    if (localStorage.getItem(bonusKey) === '1') return;
+    const bonus = 4000;
+    const prev = getBalance();
+    setBalance(prev + bonus);
+    localStorage.setItem(bonusKey, '1');
+    localStorage.setItem('rl_referrer', referrerId);
+    alert(`🎉 Դուք ստացաք ${bonus.toLocaleString()} դրամ՝ գրանցվելով referral հղումով!`);
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    handleReferralBonus();
+    if (!localStorage.getItem('rl_balance')) localStorage.setItem('rl_balance', '0');
+    updateBalanceUI();
+  });
+})();
+</script>
+
 </body>
 
 <script>
@@ -4910,7 +5033,48 @@ document.addEventListener("DOMContentLoaded", () => {
         // Initialize the app
         initializeApp();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'996331895246ddcd',t:'MTc2MTc0NjM2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'996331895246ddcd',t:'MTc2MTc0NjM2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<!-- Referral Bonus Script -->
+<script>
+(function () {
+  function getStartAppParam() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('startapp') || null;
+  }
+  function getBalance() {
+    return parseInt(localStorage.getItem('rl_balance') || '0', 10);
+  }
+  function setBalance(amount) {
+    localStorage.setItem('rl_balance', String(amount));
+    updateBalanceUI();
+  }
+  function updateBalanceUI() {
+    const balEls = document.querySelectorAll('[data-rl-balance]');
+    const val = getBalance();
+    balEls.forEach(el => el.innerText = `֏${val.toLocaleString()}`);
+  }
+  function handleReferralBonus() {
+    const startapp = getStartAppParam();
+    if (!startapp || !startapp.startsWith('r_')) return;
+    const referrerId = startapp.slice(2);
+    const bonusKey = `rl_ref_bonus_received_${startapp}`;
+    if (localStorage.getItem(bonusKey) === '1') return;
+    const bonus = 4000;
+    const prev = getBalance();
+    setBalance(prev + bonus);
+    localStorage.setItem(bonusKey, '1');
+    localStorage.setItem('rl_referrer', referrerId);
+    alert(`🎉 Դուք ստացաք ${bonus.toLocaleString()} դրամ՝ գրանցվելով referral հղումով!`);
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    handleReferralBonus();
+    if (!localStorage.getItem('rl_balance')) localStorage.setItem('rl_balance', '0');
+    updateBalanceUI();
+  });
+})();
+</script>
+
+</body>
 <script>
     function loginWithTelegram() {
       // Թաքցնում ենք բուն login content-ը
@@ -4926,5 +5090,47 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   </script>
 
+
+<!-- Referral Bonus Script -->
+<script>
+(function () {
+  function getStartAppParam() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('startapp') || null;
+  }
+  function getBalance() {
+    return parseInt(localStorage.getItem('rl_balance') || '0', 10);
+  }
+  function setBalance(amount) {
+    localStorage.setItem('rl_balance', String(amount));
+    updateBalanceUI();
+  }
+  function updateBalanceUI() {
+    const balEls = document.querySelectorAll('[data-rl-balance]');
+    const val = getBalance();
+    balEls.forEach(el => el.innerText = `֏${val.toLocaleString()}`);
+  }
+  function handleReferralBonus() {
+    const startapp = getStartAppParam();
+    if (!startapp || !startapp.startsWith('r_')) return;
+    const referrerId = startapp.slice(2);
+    const bonusKey = `rl_ref_bonus_received_${startapp}`;
+    if (localStorage.getItem(bonusKey) === '1') return;
+    const bonus = 4000;
+    const prev = getBalance();
+    setBalance(prev + bonus);
+    localStorage.setItem(bonusKey, '1');
+    localStorage.setItem('rl_referrer', referrerId);
+    alert(`🎉 Դուք ստացաք ${bonus.toLocaleString()} դրամ՝ գրանցվելով referral հղումով!`);
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    handleReferralBonus();
+    if (!localStorage.getItem('rl_balance')) localStorage.setItem('rl_balance', '0');
+    updateBalanceUI();
+  });
+})();
+</script>
+
 </body>
 </html>
+
