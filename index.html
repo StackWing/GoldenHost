@@ -694,57 +694,23 @@
         }
     </style>
 </head>
-<!-- Գլխավոր բաժին (թաքնված մինչ մուտքը) -->
-<div id="main-app" class="hidden p-6 text-center text-white">
-  <h2 class="text-2xl font-bold mb-2">Բարի գալուստ, <span id="user-name"></span> 👋</h2>
-  <p class="text-sm opacity-75 mb-6">Ձեր Telegram ID-ն՝ <span id="user-id" class="font-mono text-yellow-300"></span></p>
-  
-  <div class="section-card linen-card mb-6">
-    <h3 class="text-lg font-semibold mb-2">Ձեր հրավիրելու հղումը</h3>
-    <input id="referral-link" readonly class="w-full text-center bg-white/10 text-white py-2 rounded-lg font-mono border border-white/20">
+  <!-- Սկզբնական login content -->
+      <div id="login-content">
+        <button onclick="loginWithTelegram()" 
+                class="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg mb-4 w-full max-w-sm hover:scale-105 transition-all">
+          <span class="mr-2">📱</span>
+          Մուտք Telegram-ով
+        </button>
+        <p class="text-sm opacity-75">Անվտանգ և արագ մուտք</p>
+      </div>
+
+      <!-- Loading վիճակ -->
+      <div id="login-loading" class="hidden">
+        <div class="loading-spinner w-10 h-10 border-4 border-white border-t-transparent rounded-full mx-auto mb-4"></div>
+        <p class="text-lg">Մուտք գործում...</p>
+      </div>
+    </div>
   </div>
-
-  <p class="opacity-75 text-sm">Կիսվեք հղումով և վաստակեք մինչև <b>4000 դրամ</b> յուրաքանչյուր գրանցման համար 💰</p>
-</div>
-
-<script>
-  const tg = window.Telegram?.WebApp;
-
-  function loginWithTelegram() {
-    document.getElementById("login-content").classList.add("hidden");
-    document.getElementById("login-loading").classList.remove("hidden");
-
-    if (!tg) {
-      // Եթե բացվում է բրաուզերում՝ ոչ թե Telegram-ում
-      setTimeout(() => {
-        document.getElementById("login-screen").classList.add("hidden");
-        document.getElementById("main-app").classList.remove("hidden");
-        document.getElementById("user-name").innerText = "Դեմո Օգտատեր";
-        document.getElementById("user-id").innerText = "00001";
-        document.getElementById("referral-link").value = "https://t.me/BirdsGolden_bot/app?startapp=r_demo";
-      }, 1000);
-      return;
-    }
-
-    tg.ready();
-    const user = tg.initDataUnsafe?.user;
-    if (!user) {
-      alert("Չհաջողվեց ստանալ Telegram օգտատիրոջ տվյալները 😕");
-      return;
-    }
-
-    // Տեղադրում ենք տվյալները
-    document.getElementById("user-name").innerText = user.first_name || "Օգտատեր";
-    document.getElementById("user-id").innerText = user.id;
-    document.getElementById("referral-link").value = `https://t.me/BirdsGolden_bot/app?startapp=r_${user.id}`;
-
-    // Փոխում ենք էկրանը
-    document.getElementById("login-screen").classList.add("hidden");
-    document.getElementById("main-app").classList.remove("hidden");
-  }
-</script>
-</body>
-</html>
 
 
     <!-- Main Content -->
@@ -4945,4 +4911,20 @@ document.addEventListener("DOMContentLoaded", () => {
         initializeApp();
     </script>
  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'996331895246ddcd',t:'MTc2MTc0NjM2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>
+    function loginWithTelegram() {
+      // Թաքցնում ենք բուն login content-ը
+      document.getElementById("login-content").classList.add("hidden");
+      // Ցույց ենք տալիս loading-ը
+      document.getElementById("login-loading").classList.remove("hidden");
+
+      // Սիմուլյացիա՝ loading 2 վրկ, հետո բացում է main app-ը
+      setTimeout(() => {
+        document.getElementById("login-screen").classList.add("hidden");
+        document.getElementById("main-app").classList.remove("hidden");
+      }, 2000);
+    }
+  </script>
+
+</body>
 </html>
