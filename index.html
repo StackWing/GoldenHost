@@ -4930,4 +4930,27 @@ document.addEventListener("DOMContentLoaded", () => {
         initializeApp();
     </script>
  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'996331895246ddcd',t:'MTc2MTc0NjM2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const tg = window.Telegram?.WebApp;
+  if (!tg) {
+    console.log("⚠️ Not inside Telegram WebApp");
+    return;
+  }
+
+  try {
+    tg.ready(); // Անհրաժեշտ է Telegram-ում բացվելու համար
+    const user = tg.initDataUnsafe?.user;
+    if (user) {
+      console.log("✅ Telegram user detected:", user.id, user.first_name);
+      document.getElementById("profile-name").textContent = user.first_name || "Օգտատեր";
+    } else {
+      console.log("⚠️ No Telegram user data found");
+    }
+  } catch (err) {
+    console.error("❌ Telegram init error:", err);
+  }
+});
+</script>
+
 </html>
